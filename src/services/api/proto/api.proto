@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package api;
+
+import "services/trending/proto/trending.proto" ;
+
+service API{
+    rpc GetGithubTrending(trending.Request) returns (trending.GithubTrendingInfo){        
+    }
+}
+

@@ -1,0 +1,14 @@
+{
+    "trendingURL":"https://github.com/trending/go",
+    "dbType":"postgres",
+    "dbConnectionString":"postgres://postgres:postgres@postgres.data/angulargo?sslmode=disable",
+    "dbReadOnlyConnectionString":"postgres://postgres:postgres@postgres.data/angulargo?sslmode=disable",
+    "redis":{
+        "hosts":"redis.data:6379",
+        "password":"",
+        "masterName":"",
+        "dbNumber": 0,
+        "IdleTimeout": 28,
+        "PoolSize":1000
+    }
+}
