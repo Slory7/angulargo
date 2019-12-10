@@ -2,8 +2,8 @@ package data
 
 import (
 	"log"
-	"services/infrastructure/config"
-	"services/infrastructure/datamodels"
+	"github.com/slory7/angulargo/src/services/infrastructure/config"
+	"github.com/slory7/angulargo/src/services/infrastructure/datamodels"
 )
 
 func CacheEntities(db *Database, dbReadOnly *Database, redisConf config.RedisCfg) {

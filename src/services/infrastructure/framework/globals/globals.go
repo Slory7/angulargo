@@ -2,9 +2,9 @@ package globals
 
 import (
 	"os"
-	"services/infrastructure/config"
-	"services/infrastructure/framework/cache"
-	"services/infrastructure/framework/validates"
+	"github.com/slory7/angulargo/src/services/infrastructure/config"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/cache"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/validates"
 
 	"github.com/jwells131313/dargo/ioc"
 )

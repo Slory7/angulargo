@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package api;
 
-import "services/trending/proto/trending.proto" ;
+import "github.com/slory7/angulargo/src/services/trending/proto/trending.proto" ;
 
 service API{
     rpc GetGithubTrending(trending.Request) returns (trending.GithubTrendingInfo){        

@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	api "services/api/proto"
-	trending "services/trending/proto"
+	api "github.com/slory7/angulargo/src/services/api/proto"
+	trending "github.com/slory7/angulargo/src/services/trending/proto"
 
 	"github.com/jinzhu/copier"
 
@@ -39,7 +39,7 @@ func (s *APISrv) GetGithubTrending(ctx context.Context, req *trending.Request, r
 		traceID = md["Traceid"]
 	}
 	if len(traceID) == 0 {
-		traceID = uuid.Must(uuid.NewV4()).String()
+		traceID = uuid.NewV4().String()
 	}
 	if len(md["Fromname"]) == 0 {
 		md["Fromname"] = "api.v1"

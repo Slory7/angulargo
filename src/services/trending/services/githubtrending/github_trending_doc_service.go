@@ -1,7 +1,7 @@
 package githubtrending
 
 import (
-	"services/trending/datamodels"
+	"github.com/slory7/angulargo/src/services/trending/datamodels"
 	"strconv"
 	"strings"
 

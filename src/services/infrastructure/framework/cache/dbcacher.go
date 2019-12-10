@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"hash/crc32"
 
-	"github.com/go-xorm/core"
+	"xorm.io/core"
 )
 
 type DBCacher struct {

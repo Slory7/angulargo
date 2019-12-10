@@ -2,8 +2,8 @@ package urls
 
 import (
 	"errors"
-	"services/infrastructure/business/constants"
-	"services/infrastructure/framework/utils"
+	"github.com/slory7/angulargo/src/services/infrastructure/business/constants"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/utils"
 	"strings"
 
 	"github.com/kataras/iris"

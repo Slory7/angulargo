@@ -1,8 +1,8 @@
 package githubtrending
 
 import (
-	"services/infrastructure/data/repositories"
-	m "services/trending/datamodels"
+	"github.com/slory7/angulargo/src/services/infrastructure/data/repositories"
+	m "github.com/slory7/angulargo/src/services/trending/datamodels"
 )
 
 type IGithubTrendingService interface {

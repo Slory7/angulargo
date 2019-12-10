@@ -2,9 +2,9 @@ package services
 
 import (
 	"encoding/json"
-	"services/infrastructure/framework/globals"
-	"services/infrastructure/framework/net/httpclient"
-	"services/infrastructure/framework/security"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/globals"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/net/httpclient"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/security"
 	"sync"
 	"time"
 )

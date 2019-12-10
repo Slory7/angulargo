@@ -2,8 +2,8 @@ package appstart
 
 import (
 	"log"
-	"services/infrastructure/data"
-	"services/infrastructure/data/migration"
+	"github.com/slory7/angulargo/src/services/infrastructure/data"
+	"github.com/slory7/angulargo/src/services/infrastructure/data/migration"
 )
 
 func InitDB(dbType string, connectionString string, readonlyConnectionString string, showSQL bool) (db *data.Database, dbReadOnly *data.Database) {

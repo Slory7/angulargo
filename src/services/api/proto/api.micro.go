@@ -14,7 +14,7 @@ package api
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import trending "services/trending/proto"
+import trending "github.com/slory7/angulargo/src/services/trending/proto"
 
 import (
 	context "context"

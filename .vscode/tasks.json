@@ -1,19 +1,17 @@
 {
     "version": "2.0.0",
-    "type": "shell",    
+    "type": "shell",
     "command": "go",
     "echoCommand": true,
     "options": {
         "cwd": "${fileDirname}",
-        "env": {
-            "GOPATH":"C:\\Users\\bruce\\go;C:\\Users\\tianpenghui\\go;E:\\go;${workspaceFolder}"
-        }        
     },
     "tasks": [
         {
             "label": "build",
+            "command": "go build",
             "args": [
-                "-x"                             
+                "-x"
             ],
             "group": {
                 "kind": "build",
@@ -22,6 +20,7 @@
         },
         {
             "label": "test",
+            "command": "go test",
             "args": [
                 "test"
             ],

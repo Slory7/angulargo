@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"services/infrastructure/config"
+	"github.com/slory7/angulargo/src/services/infrastructure/config"
 	"time"
 )
 

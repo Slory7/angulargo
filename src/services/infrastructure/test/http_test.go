@@ -2,7 +2,7 @@ package test
 
 import (
 	"fmt"
-	"services/infrastructure/framework/net/httpclient"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/net/httpclient"
 	"testing"
 
 	_ "github.com/crgimenes/goconfig/json"
@@ -12,6 +12,6 @@ import (
 func TestHttpPost(t *testing.T) {
 	reqID := uuid.NewV4().String()
 	result, err := httpclient.HttpSend("http://api.xxx.cn", "/token", nil, nil, httpclient.FORM, "POST", "", httpclient.TokenEmpty, reqID, true, 5)
-	fmt.Printf("%v", err)
-	fmt.Printf("%v", result)
+	t.Printf("%v", err)
+	t..Printf("%v", result)
 }

@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"errors"
-	gather "services/gather/proto"
-	"services/infrastructure/appstart"
-	m "services/trending/datamodels"
-	trending "services/trending/proto"
-	"services/trending/services/githubtrending"
+	gather "github.com/slory7/angulargo/src/services/gather/proto"
+	"github.com/slory7/angulargo/src/services/infrastructure/appstart"
+	m "github.com/slory7/angulargo/src/services/trending/datamodels"
+	trending "github.com/slory7/angulargo/src/services/trending/proto"
+	"github.com/slory7/angulargo/src/services/trending/services/githubtrending"
 	"time"
 
 	"github.com/golang/protobuf/ptypes"

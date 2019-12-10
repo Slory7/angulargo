@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"services/infrastructure/data"
+	"github.com/slory7/angulargo/src/services/infrastructure/data"
 )
 
 type IRepositoryReadOnly interface {

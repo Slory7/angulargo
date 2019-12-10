@@ -1,9 +1,9 @@
 package migrations
 
 import (
-	"services/infrastructure/data"
-	"services/infrastructure/data/migration"
-	m "services/trending/datamodels"
+	"github.com/slory7/angulargo/src/services/infrastructure/data"
+	"github.com/slory7/angulargo/src/services/infrastructure/data/migration"
+	m "github.com/slory7/angulargo/src/services/trending/datamodels"
 
 	"github.com/nuveo/log"
 )

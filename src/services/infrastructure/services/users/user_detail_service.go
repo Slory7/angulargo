@@ -2,8 +2,8 @@ package users
 
 import (
 	"errors"
-	"services/infrastructure/data/repositories"
-	m "services/infrastructure/datamodels"
+	"github.com/slory7/angulargo/src/services/infrastructure/data/repositories"
+	m "github.com/slory7/angulargo/src/services/infrastructure/datamodels"
 )
 
 type IUserDetailService interface {

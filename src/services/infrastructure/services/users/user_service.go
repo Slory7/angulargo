@@ -2,10 +2,10 @@ package users
 
 import (
 	"errors"
-	"services/infrastructure/business/constants"
-	"services/infrastructure/data"
-	"services/infrastructure/data/repositories"
-	m "services/infrastructure/datamodels"
+	"github.com/slory7/angulargo/src/services/infrastructure/business/constants"
+	"github.com/slory7/angulargo/src/services/infrastructure/data"
+	"github.com/slory7/angulargo/src/services/infrastructure/data/repositories"
+	m "github.com/slory7/angulargo/src/services/infrastructure/datamodels"
 	"strconv"
 	"time"
 )

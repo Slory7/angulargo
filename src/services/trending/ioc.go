@@ -1,10 +1,10 @@
 package main
 
 import (
-	"services/infrastructure/data/repositories"
-	"services/infrastructure/framework/globals"
-	"services/infrastructure/framework/utils"
-	"services/trending/services/githubtrending"
+	"github.com/slory7/angulargo/src/services/infrastructure/data/repositories"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/globals"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/utils"
+	"github.com/slory7/angulargo/src/services/trending/services/githubtrending"
 
 	"github.com/jwells131313/dargo/ioc"
 )

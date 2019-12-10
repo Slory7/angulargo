@@ -1,7 +1,7 @@
 package urls
 
 import (
-	"services/infrastructure/business/constants"
+	"github.com/slory7/angulargo/src/services/infrastructure/business/constants"
 )
 
 type QueryObject struct {

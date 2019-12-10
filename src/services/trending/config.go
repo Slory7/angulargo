@@ -1,7 +1,7 @@
 package main
 
 import (
-	"services/infrastructure/config"
+	"github.com/slory7/angulargo/src/services/infrastructure/config"
 
 	_ "github.com/crgimenes/goconfig/json"
 )

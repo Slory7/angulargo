@@ -2,7 +2,7 @@ package test
 
 import (
 	"fmt"
-	"services/infrastructure/framework/utils"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/utils"
 	"testing"
 	"time"
 )

@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"errors"
-	"services/infrastructure/business/contracts/urls"
-	m "services/infrastructure/datamodels"
-	"services/infrastructure/framework/globals"
-	"services/infrastructure/services/users"
-	v "services/infrastructure/viewmodels"
+	"github.com/slory7/angulargo/src/services/infrastructure/business/contracts/urls"
+	m "github.com/slory7/angulargo/src/services/infrastructure/datamodels"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/globals"
+	"github.com/slory7/angulargo/src/services/infrastructure/services/users"
+	v "github.com/slory7/angulargo/src/services/infrastructure/viewmodels"
 	"strconv"
 	"strings"
 

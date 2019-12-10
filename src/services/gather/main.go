@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"errors"
-	gather "services/gather/proto"
-	"services/infrastructure/framework/net/httpclient"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/net/httpclient"
+	gather "github.com/slory7/angulargo/src/services/gather/proto"
 	"strconv"
 
 	"github.com/nuveo/log"

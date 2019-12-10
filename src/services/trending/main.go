@@ -1,13 +1,13 @@
 package main
 
 import (
-	"services/infrastructure/appstart"
-	"services/infrastructure/config"
-	"services/infrastructure/data/repositories"
-	"services/infrastructure/framework/cache"
-	"services/infrastructure/framework/globals"
-	"services/trending/data"
-	"services/trending/data/migrations"
+	"github.com/slory7/angulargo/src/services/infrastructure/appstart"
+	"github.com/slory7/angulargo/src/services/infrastructure/config"
+	"github.com/slory7/angulargo/src/services/infrastructure/data/repositories"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/cache"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/globals"
+	"github.com/slory7/angulargo/src/services/trending/data"
+	"github.com/slory7/angulargo/src/services/trending/data/migrations"
 	"time"
 )
 

@@ -1,16 +1,16 @@
 package main
 
 import (
-	"services/infrastructure/config"
-	"services/infrastructure/data"
-	"services/infrastructure/data/migration/migrations"
-	"services/infrastructure/data/repositories"
-	"services/infrastructure/framework/cache"
-	"services/infrastructure/framework/globals"
-	"services/infrastructure/framework/validates"
+	"github.com/slory7/angulargo/src/services/infrastructure/config"
+	"github.com/slory7/angulargo/src/services/infrastructure/data"
+	"github.com/slory7/angulargo/src/services/infrastructure/data/migration/migrations"
+	"github.com/slory7/angulargo/src/services/infrastructure/data/repositories"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/cache"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/globals"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/validates"
 	"time"
 
-	"services/infrastructure/appstart"
+	"github.com/slory7/angulargo/src/services/infrastructure/appstart"
 
 	"github.com/kataras/iris"
 
@@ -60,7 +60,7 @@ func main() {
 	appstart.ConfigureRoutes(app)
 
 	//curl localhost:8181/debug/pprof/trace?seconds=10 > trace.out
-	//go tool trace services/infrastructure.exe trace.out
+	//go tool trace github.com/slory7/angulargo/src/services/infrastructure/infrastructureinfrastructure.exe trace.out
 	//http://www.sharelinux.com/2017/03/22/Golang%E4%B9%8Bprofiler%E5%92%8Ctrace%E5%B7%A5%E5%85%B7/
 	if globals.Config.AppIsDebug {
 		go func() {

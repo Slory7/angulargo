@@ -3,7 +3,7 @@ package migration
 import (
 	"errors"
 	"fmt"
-	"services/infrastructure/data"
+	"github.com/slory7/angulargo/src/services/infrastructure/data"
 )
 
 type MigrateFunc func(*data.Database) error

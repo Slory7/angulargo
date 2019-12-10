@@ -3,8 +3,8 @@ package data
 import (
 	"fmt"
 	"math"
-	"services/infrastructure/config"
-	"services/infrastructure/framework/cache"
+	"github.com/slory7/angulargo/src/services/infrastructure/config"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/cache"
 	"strings"
 
 	_ "github.com/denisenkom/go-mssqldb" //mssql

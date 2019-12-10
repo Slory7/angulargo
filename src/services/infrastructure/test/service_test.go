@@ -2,10 +2,10 @@ package test
 
 import (
 	"fmt"
-	"services/infrastructure/config"
-	"services/infrastructure/framework/cache"
-	"services/infrastructure/framework/globals"
-	"services/infrastructure/services"
+	"github.com/slory7/angulargo/src/services/infrastructure/config"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/cache"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/globals"
+	"github.com/slory7/angulargo/src/services/infrastructure/services"
 	"testing"
 	"time"
 

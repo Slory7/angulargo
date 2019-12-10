@@ -1,10 +1,10 @@
 package appstart
 
 import (
-	"services/infrastructure/controllers"
-	"services/infrastructure/framework/globals"
-	"services/infrastructure/framework/utils"
-	"services/infrastructure/services/users"
+	"github.com/slory7/angulargo/src/services/infrastructure/controllers"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/globals"
+	"github.com/slory7/angulargo/src/services/infrastructure/framework/utils"
+	"github.com/slory7/angulargo/src/services/infrastructure/services/users"
 
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/mvc"
