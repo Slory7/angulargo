@@ -1,11 +1,14 @@
 FROM golang as builder
+ENV GOPROXY https://goproxy.io
 RUN mkdir /build 
-ADD ./src /build/src
-ENV GOPATH $GOPATH:/build
-WORKDIR /build/src
-#RUN apk add git 
-RUN go get -d ./...
+WORKDIR /build
+
+ADD ./src ./src
+COPY go.mod .
+RUN go mod download
+
 WORKDIR /build/src/services/api
+
 RUN go build -o main .
 FROM alpine
 RUN adduser -S -D -H -h /app appuser

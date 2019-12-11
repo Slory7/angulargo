@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 	api "github.com/slory7/angulargo/src/services/api/proto"
 	trending "github.com/slory7/angulargo/src/services/trending/proto"
 
@@ -12,7 +14,6 @@ import (
 	micro "github.com/micro/go-micro"
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/metadata"
-	uuid "github.com/satori/go.uuid"
 	"golang.org/x/net/trace"
 )
 
@@ -39,7 +40,7 @@ func (s *APISrv) GetGithubTrending(ctx context.Context, req *trending.Request, r
 		traceID = md["Traceid"]
 	}
 	if len(traceID) == 0 {
-		traceID = uuid.NewV4().String()
+		traceID = uuid.New().String()
 	}
 	if len(md["Fromname"]) == 0 {
 		md["Fromname"] = "api.v1"

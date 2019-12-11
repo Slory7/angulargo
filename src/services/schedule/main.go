@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	trending "services/trending/proto"
+	trending "github.com/slory7/angulargo/src/services/trending/proto"
 
 	"github.com/slory7/angulargo/src/services/infrastructure/config"
 	"github.com/slory7/angulargo/src/services/infrastructure/framework/globals"
@@ -10,9 +10,9 @@ import (
 
 	"github.com/nuveo/log"
 
+	"github.com/google/uuid"
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/metadata"
-	uuid "github.com/satori/go.uuid"
 	"golang.org/x/net/trace"
 )
 
@@ -39,13 +39,12 @@ func GetherSchedule() {
 
 	md := metadata.Metadata{}
 
-	if traceID, err := uuid.NewV4(); err == nil {
-		md["Traceid"] = traceID.String()
-		md["Fromname"] = "schedule.v1"
-		ctx = metadata.NewContext(ctx, md)
+	traceID := uuid.New()
+	md["Traceid"] = traceID.String()
+	md["Fromname"] = "schedule.v1"
+	ctx = metadata.NewContext(ctx, md)
 
-		log.Printf("traceID %s\n", traceID)
-	}
+	log.Printf("traceID %s\n", traceID)
 
 	client := client.DefaultClient
 

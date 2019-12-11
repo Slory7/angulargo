@@ -1,8 +1,9 @@
 package cache
 
 import (
-	"math"
 	"github.com/slory7/angulargo/src/services/infrastructure/config"
+	"github.com/google/uuid"
+	"math"
 	"strings"
 	"sync"
 	"time"
@@ -11,7 +12,6 @@ import (
 
 	"github.com/SimonWaldherr/golibs/cache"
 	"github.com/go-redis/redis"
-	uuid "github.com/satori/go.uuid"
 )
 
 type iDistributedCache interface {
@@ -90,7 +90,7 @@ func (cache *MemoryCache) GetMemoryDistributedItem(key string, callBack func() i
 					duration = time.Minute * math.MaxInt16
 				}
 				if !b {
-					nver := uuid.NewV4().String()
+					nver := uuid.New().String()
 					if duration == -1 {
 						duration = cache.mcache.Expiration
 					}
@@ -136,7 +136,7 @@ func (cache *MemoryCache) GetMemoryDistributedHashItem(key string, field string,
 					duration = cache.mcache.Expiration
 				}
 				if !b {
-					nver := uuid.NewV4().String()
+					nver := uuid.New().String()
 					if duration == -1 {
 						duration = cache.mcache.Expiration
 					}
@@ -163,7 +163,7 @@ func (cache *MemoryCache) SetMemoryDistributedHashItem(key string, field string,
 		cache.lock3.Lock()
 		defer cache.lock3.Unlock()
 		if b, v = cache.dCacher.HGet(key, field); !b {
-			v = uuid.NewV4().String()
+			v = uuid.New().String()
 			cache.dCacher.HSet(key, field, v)
 		}
 	}

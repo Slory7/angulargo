@@ -13,11 +13,12 @@ require (
 	github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385 // indirect
 	github.com/flosch/pongo2 v0.0.0-20190707114632-bbf5a6c351f4 // indirect
 	github.com/go-playground/locales v0.13.0
-	github.com/go-playground/universal-translator v0.17.0
+	github.com/go-playground/universal-translator v0.16.0
 	github.com/go-redis/redis v6.15.6+incompatible
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/go-xorm/xorm v0.7.9
 	github.com/golang/protobuf v1.3.2
+	github.com/google/uuid v1.1.1
 	github.com/gorilla/schema v1.1.0 // indirect
 	github.com/iris-contrib/blackfriday v2.0.0+incompatible // indirect
 	github.com/iris-contrib/formBinder v5.0.0+incompatible // indirect
@@ -32,11 +33,8 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.2 // indirect
 	github.com/nuveo/log v0.0.0-20190430190217-44d02db6bdf8
 	github.com/ryanuber/columnize v2.1.0+incompatible // indirect
-	github.com/satori/go.uuid v1.2.0
-	golang.org/x/crypto v0.0.0-20191206172530-e9b2fee46413 // indirect
-	golang.org/x/net v0.0.0-20191109021931-daa7c04131f5
-	gopkg.in/go-playground/validator.v9 v9.30.2
+	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
+	gopkg.in/go-playground/validator.v9 v9.30.0
 	gopkg.in/guregu/null.v3 v3.4.0
-	gopkg.in/yaml.v2 v2.2.7 // indirect
 	xorm.io/core v0.7.2
 )
