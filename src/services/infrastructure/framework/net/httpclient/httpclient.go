@@ -67,7 +67,7 @@ func HttpSend(baseUrl string, relativeUrl string, urlParams map[string]string, h
 	}
 	req, err := http.NewRequest(method, url, reqReader)
 	if err == nil {
-		req.Header.Set("accept", "application/json")
+		req.Header.Set("accept", "application/json,text/html")
 		req.Header.Set("User-Agent", "GoAppEx/1.0")
 
 		if len(contentType) > 0 {

@@ -61,11 +61,11 @@ func (r *RepositoryReadOnly) Query(slicePtr interface{}, selectquery string, par
 }
 
 func (r *RepositoryReadOnly) Exists(dest interface{}, query string, params ...interface{}) (bool, error) {
-	b, err := r.db.Exists(dest, query, params)
+	b, err := r.db.Exists(dest, query, params...)
 	return b, err
 }
 
 func (r *RepositoryReadOnly) Count(dest interface{}, query string, params ...interface{}) (int64, error) {
-	n, err := r.db.Count(dest, query, params)
+	n, err := r.db.Count(dest, query, params...)
 	return n, err
 }

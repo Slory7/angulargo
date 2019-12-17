@@ -24,24 +24,24 @@ func (*GithubTrendingDocService) ParseDoc(content string) ([]*datamodels.GitRepo
 		return gitRepos, err
 	}
 
-	doc.Find("ol.repo-list li").Each(func(i int, s *goquery.Selection) {
-		title := strings.TrimSpace(s.Find("h3").Text())
-		noSpaceTitle := strings.Replace(title, " ", "", -1)
-		author := strings.Split(title, " / ")[0]
-		name := strings.Split(title, " / ")[1]
+	doc.Find("article.Box-row").Each(func(i int, s *goquery.Selection) {
+		title := strings.TrimSpace(s.Find("h1").Text())
+		noSpaceTitle := strings.Replace(title, "\n", "", -1)
+		noSpaceTitle = strings.Replace(noSpaceTitle, " ", "", -1)
+		author := strings.Split(noSpaceTitle, "/")[0]
+		name := strings.Split(noSpaceTitle, "/")[1]
 		href := "https://github.com/" + noSpaceTitle
-		description := strings.TrimSpace(s.Find(".py-1 p").Text())
+		description := strings.TrimSpace(s.Find("p").Text())
 		language := strings.TrimSpace(s.Find("[itemprop=programmingLanguage]").Text())
-		forkLink := "/" + noSpaceTitle + "/network"
-		s1 := s.Find("[href=\"" + forkLink + "\"]").Text()
-		s1 = strings.Replace(s1, ",", "", -1)
-		s1 = strings.TrimSpace(s1)
-		forks, _ := strconv.ParseInt(s1, 10, 32)
-		starLink := "/" + noSpaceTitle + "/stargazers"
-		s2 := s.Find("[href=\"" + starLink + "\"]").Text()
-		s2 = strings.Replace(s2, ",", "", -1)
-		s2 = strings.TrimSpace(s2)
-		stars, _ := strconv.ParseInt(s2, 10, 32)
+
+		starHref := "/" + noSpaceTitle + "/stargazers." + name
+		sstar := strings.TrimSpace(s.Find("[href=\"" + starHref + "\"]").Text())
+		stars, _ := strconv.ParseInt(strings.Replace(sstar, ",", "", -1), 10, 32)
+
+		forkHref := "/" + noSpaceTitle + "/network/members." + name
+		sfork := strings.TrimSpace(s.Find("[href=\"" + forkHref + "\"]").Text())
+		forks, _ := strconv.ParseInt(strings.Replace(sfork, ",", "", -1), 10, 32)
+
 		gitRepo := &datamodels.GitRepo{
 			Author:      author,
 			Name:        name,
