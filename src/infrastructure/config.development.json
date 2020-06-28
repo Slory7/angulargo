@@ -1,0 +1,21 @@
+{
+    "appIsDebug": true,
+    "addr": ":8080",
+    "dbType": "postgres",
+    "dbConnectionString": "postgres://postgres:postgres@docker.data/infrastructure?sslmode=disable",
+    "dbReadOnlyConnectionString": "postgres://postgres:postgres@docker.data/infrastructure?sslmode=disable",
+    "cacheByMinutes":120,
+    "redis": {
+        "hosts": "docker.data:6379",
+        "password": "",
+        "masterName": "",
+        "dbNumber": 0,
+        "IdleTimeout": 28,
+        "PoolSize": 1000
+    },
+    "_comment": {
+        "dbType": "mssql",
+        "dbConnectionString": "odbc:server=localhost;user id=test;password={testing};database=AngularGo;app name=AngularGo",
+        "dbReadOnlyConnectionString": "odbc:server=localhost;user id=test;password={testing};database=angulargo;app name=angulargo"
+    }
+}

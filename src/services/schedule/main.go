@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+
 	trending "github.com/slory7/angulargo/src/services/trending/proto"
 
-	"github.com/slory7/angulargo/src/services/infrastructure/config"
-	"github.com/slory7/angulargo/src/services/infrastructure/framework/globals"
 	"time"
+
+	"github.com/slory7/angulargo/src/infrastructure/app"
+	"github.com/slory7/angulargo/src/infrastructure/config"
 
 	"github.com/nuveo/log"
 
@@ -19,7 +21,7 @@ import (
 func main() {
 	log.Println("Schedule is running...")
 
-	glbConfig = config.GetConfig(globals.GetEnvironment(), &Config{}).(*Config)
+	glbConfig = config.GetConfig(app.GetEnvironment(), &Config{}).(*Config)
 
 	log.Println("Run GetherSchedule first")
 	GetherSchedule()

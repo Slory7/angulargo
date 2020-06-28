@@ -1,7 +1,7 @@
 package githubtrending
 
 import (
-	"github.com/slory7/angulargo/src/services/infrastructure/data/repositories"
+	"github.com/slory7/angulargo/src/infrastructure/data/repositories"
 	m "github.com/slory7/angulargo/src/services/trending/datamodels"
 )
 

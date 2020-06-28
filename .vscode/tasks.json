@@ -9,8 +9,9 @@
     "tasks": [
         {
             "label": "build",
-            "command": "go build",
+            "command": "go",
             "args": [
+                "build",
                 "-x"
             ],
             "group": {

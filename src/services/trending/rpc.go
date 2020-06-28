@@ -3,12 +3,13 @@ package main
 import (
 	"context"
 	"errors"
+	"time"
+
+	"github.com/slory7/angulargo/src/infrastructure/app"
 	gather "github.com/slory7/angulargo/src/services/gather/proto"
-	"github.com/slory7/angulargo/src/services/infrastructure/appstart"
 	m "github.com/slory7/angulargo/src/services/trending/datamodels"
 	trending "github.com/slory7/angulargo/src/services/trending/proto"
 	"github.com/slory7/angulargo/src/services/trending/services/githubtrending"
-	"time"
 
 	"github.com/golang/protobuf/ptypes"
 
@@ -56,7 +57,7 @@ func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trendin
 		return err
 	}
 
-	serv, err2 := appstart.GetIoCInstance((*githubtrending.IGithubTrendingService)(nil))
+	serv, err2 := app.Instance.GetIoCInstance((*githubtrending.IGithubTrendingService)(nil))
 	if err2 != nil {
 		return err2
 	}
@@ -95,7 +96,7 @@ func (s *TrendingSrv) getGithubTrendingInternal(ctx context.Context) (data m.Git
 		return data, err1
 	}
 
-	serv, err2 := appstart.GetIoCInstance((*githubtrending.IGithubTrendingDocService)(nil))
+	serv, err2 := app.Instance.GetIoCInstance((*githubtrending.IGithubTrendingDocService)(nil))
 	if err2 != nil {
 		return data, err2
 	}

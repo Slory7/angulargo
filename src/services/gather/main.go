@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"errors"
-	"github.com/slory7/angulargo/src/services/infrastructure/framework/net/httpclient"
-	gather "github.com/slory7/angulargo/src/services/gather/proto"
 	"strconv"
+
+	"github.com/slory7/angulargo/src/infrastructure/framework/net/httpclient"
+	gather "github.com/slory7/angulargo/src/services/gather/proto"
 
 	"github.com/nuveo/log"
 	"golang.org/x/net/trace"

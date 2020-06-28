@@ -1,40 +1,33 @@
 package main
 
 import (
-	"github.com/slory7/angulargo/src/services/infrastructure/appstart"
-	"github.com/slory7/angulargo/src/services/infrastructure/config"
-	"github.com/slory7/angulargo/src/services/infrastructure/data/repositories"
-	"github.com/slory7/angulargo/src/services/infrastructure/framework/cache"
-	"github.com/slory7/angulargo/src/services/infrastructure/framework/globals"
+	"github.com/slory7/angulargo/src/infrastructure/app"
+	"github.com/slory7/angulargo/src/infrastructure/config"
 	"github.com/slory7/angulargo/src/services/trending/data"
 	"github.com/slory7/angulargo/src/services/trending/data/migrations"
-	"time"
 )
 
 func main() {
 
 	//Config
-	glbConfig = config.GetConfig(globals.GetEnvironment(), &Config{}).(*Config)
+	glbConfig = config.GetConfig(app.GetEnvironment(), &Config{}).(*Config)
 
-	//Cache
-	globals.Cache = cache.NewCacheDistributed(time.Minute*120, time.Minute*5, glbConfig.Redis)
+	app.InitAppInstance(&glbConfig.Config)
 
-	//db Init
-	db, dbReadOnly := appstart.InitDB(glbConfig.DBType, glbConfig.DBConnectionString, glbConfig.DBReadOnlyConnectionString, glbConfig.AppIsDebug)
-
-	//db.Sync(new(datamodels.User))
+	//init db
+	app.Instance.InitDB()
 
 	//db migration
-	appstart.MigrationOrRollback(db, migrations.InitMigration(), migrations.MigrationVersions, glbConfig.RollbackVersionID)
+	app.Instance.MigrateOrRollback(migrations.InitMigration(), migrations.MigrationVersions, glbConfig.RollbackVersionID)
+
+	//cache
+	app.Instance.InitCache()
 
 	//data cache
-	data.CacheEntities(db, dbReadOnly, glbConfig.Redis)
+	app.Instance.CacheEntity(data.GetCacheEntities())
 
-	repo := repositories.NewRepository(db)
-	repoReadOnly := repositories.NewRepositoryReadOnly(dbReadOnly)
-
-	//IoC
-	RegisterIoC(repo, repoReadOnly)
+	//ioc
+	app.Instance.RegisterIoC(registerIoC)
 
 	//Start rpc
 	StartRpc()
