@@ -5,8 +5,9 @@ go 1.13
 require (
 	github.com/PuerkitoBio/goquery v1.5.1
 	github.com/andybalholm/cascadia v1.2.0 // indirect
-	github.com/crgimenes/goconfig v1.2.1
+	github.com/crgimenes/goconfig v1.2.2-0.20200507141945-54d926228260
 	github.com/denisenkom/go-mssqldb v0.0.0-20200620013148-b91950f658ec
+	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-redis/redis v6.15.8+incompatible

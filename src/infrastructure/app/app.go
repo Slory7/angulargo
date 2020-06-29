@@ -1,9 +1,10 @@
 package app
 
 import (
-	"log"
 	"os"
 	"time"
+
+	"github.com/nuveo/log"
 
 	"github.com/jwells131313/dargo/ioc"
 	"github.com/slory7/angulargo/src/infrastructure/config"
@@ -11,6 +12,7 @@ import (
 	"github.com/slory7/angulargo/src/infrastructure/data/db"
 	"github.com/slory7/angulargo/src/infrastructure/data/migration"
 	"github.com/slory7/angulargo/src/infrastructure/framework/cache"
+	"github.com/slory7/angulargo/src/infrastructure/framework/utils"
 	"github.com/slory7/angulargo/src/infrastructure/framework/validates"
 )
 
@@ -46,10 +48,10 @@ func (app *App) InitCache() {
 	if n <= 0 {
 		n = 120
 	}
-	if app.Config.Redis == nil {
+	if app.Config.Redis.Hosts == "" {
 		app.Cache = cache.NewCache(time.Minute*time.Duration(n), time.Minute*5)
 	} else {
-		app.Cache = cache.NewCacheDistributed(time.Minute*time.Duration(n), time.Minute*5, *app.Config.Redis)
+		app.Cache = cache.NewCacheDistributed(time.Minute*time.Duration(n), time.Minute*5, app.Config.Redis)
 	}
 }
 
@@ -59,8 +61,9 @@ func (app *App) InitValidator() {
 
 func (app *App) CacheEntity(entities ...interface{}) {
 	for _, en := range entities {
-		db.CacheEntity(en, *app.Config.Redis, app.db, app.dbReadOnly)
-		log.Println("CacheEntity: %v", en)
+		db.CacheEntity(en, app.Config.Redis, app.db, app.dbReadOnly)
+		s := utils.GetInterfaceName(en)
+		log.Printf("CacheEntity: %s\n", s)
 	}
 }
 

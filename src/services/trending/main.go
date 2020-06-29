@@ -24,7 +24,10 @@ func main() {
 	app.Instance.InitCache()
 
 	//data cache
-	app.Instance.CacheEntity(data.GetCacheEntities())
+	app.Instance.CacheEntity(data.GetCacheEntities()...)
+
+	//validator
+	app.Instance.InitValidator()
 
 	//ioc
 	app.Instance.RegisterIoC(registerIoC)

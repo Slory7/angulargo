@@ -17,5 +17,9 @@ func IsField(o interface{}, fieldname string) bool {
 }
 
 func GetInterfaceName(i interface{}) string {
-	return reflect.TypeOf(i).Elem().Name()
+	if t := reflect.TypeOf(i); t.Kind() == reflect.Ptr {
+		return t.Elem().Name()
+	} else {
+		return t.Name()
+	}
 }

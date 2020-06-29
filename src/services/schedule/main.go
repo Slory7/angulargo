@@ -13,7 +13,7 @@ import (
 	"github.com/nuveo/log"
 
 	"github.com/google/uuid"
-	"github.com/micro/go-micro/client"
+	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/metadata"
 	"golang.org/x/net/trace"
 )
@@ -48,7 +48,10 @@ func GetherSchedule() {
 
 	log.Printf("traceID %s\n", traceID)
 
-	client := client.DefaultClient
+	service := micro.NewService()
+	service.Init()
+
+	client := service.Client()
 
 	trendingClient := trending.NewTrendingService("angulargo.micro.srv.trending", client)
 	req := &trending.Request{}

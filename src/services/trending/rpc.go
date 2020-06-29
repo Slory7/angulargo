@@ -90,20 +90,25 @@ func (s *TrendingSrv) getGithubTrendingInternal(ctx context.Context) (data m.Git
 
 	gatherClient := gather.NewGatherService("angulargo.micro.srv.gather", s.Client)
 	rpcReq := &gather.Request{BaseUrl: glbConfig.TrendingURL, Method: "GET", TimeOut: 5}
-	result, err1 := gatherClient.GetHttpContent(ctx, rpcReq)
-	if err1 != nil {
-		log.Errorf("get %s error:%v\n", rpcReq.BaseUrl, err1)
-		return data, err1
+	result, err := gatherClient.GetHttpContent(ctx, rpcReq)
+	if err != nil {
+		log.Errorf("get %s error:%v\n", rpcReq.BaseUrl, err)
+		return data, err
 	}
 
-	serv, err2 := app.Instance.GetIoCInstance((*githubtrending.IGithubTrendingDocService)(nil))
-	if err2 != nil {
-		return data, err2
+	serv, err := app.Instance.GetIoCInstance((*githubtrending.IGithubTrendingDocService)(nil))
+	if err != nil {
+		return data, err
 	}
 	docService := serv.(githubtrending.IGithubTrendingDocService)
-	repos, err3 := docService.ParseDoc(result.Content)
-	if err3 != nil {
-		return data, err3
+	repos, err := docService.ParseDoc(result.Content)
+	if err != nil {
+		return data, err
+	}
+	for _, rep := range repos {
+		if err := app.Instance.Validator.Struct(rep); err != nil {
+			return data, err
+		}
 	}
 	trending := m.GitTrendingAll{}
 	t := time.Now()

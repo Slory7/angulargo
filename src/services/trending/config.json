@@ -3,6 +3,7 @@
     "dbType":"postgres",
     "dbConnectionString":"postgres://postgres:postgres@postgres.data/angulargo?sslmode=disable",
     "dbReadOnlyConnectionString":"postgres://postgres:postgres@postgres.data/angulargo?sslmode=disable",
+    "cacheByMinutes":120,
     "redis":{
         "hosts":"redis.data:6379",
         "password":"",

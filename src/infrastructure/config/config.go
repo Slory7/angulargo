@@ -8,13 +8,13 @@ import (
 )
 
 type Config struct {
-	AppIsDebug                 bool      `json:"appIsDebug" cfg:"appIsDebug"`
-	Addr                       string    `json:"addr" cfg:"addr"`
-	DBType                     string    `json:"dbType" cfg:"dbType"`
-	DBConnectionString         string    `json:"dbConnectionString" cfg:"dbConnectionString"`
-	DBReadOnlyConnectionString string    `json:"dbReadOnlyConnectionString" cfg:"dbReadOnlyConnectionString"`
-	Redis                      *RedisCfg `json:"redis" cfg:"redis"`
-	CacheByMinutes             int       `json:"cacheByMinutes" cfg:"cacheByMinutes"`
+	AppIsDebug                 bool     `json:"appIsDebug" cfg:"appIsDebug"`
+	Addr                       string   `json:"addr" cfg:"addr"`
+	DBType                     string   `json:"dbType" cfg:"dbType"`
+	DBConnectionString         string   `json:"dbConnectionString" cfg:"dbConnectionString"`
+	DBReadOnlyConnectionString string   `json:"dbReadOnlyConnectionString" cfg:"dbReadOnlyConnectionString"`
+	Redis                      RedisCfg `json:"redis" cfg:"redis"`
+	CacheByMinutes             int      `json:"cacheByMinutes" cfg:"cacheByMinutes"`
 	RollbackVersionID          string
 }
 
@@ -35,6 +35,7 @@ func GetConfig(environment string, config interface{}) interface{} {
 	} else {
 		goconfig.File = "config.json"
 	}
+	goconfig.DisableFlags = true
 	err := goconfig.Parse(config)
 	if err != nil {
 		log.Fatal("config: ", err)

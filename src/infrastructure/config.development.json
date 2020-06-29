@@ -4,7 +4,8 @@
     "dbType": "postgres",
     "dbConnectionString": "postgres://postgres:postgres@docker.data/infrastructure?sslmode=disable",
     "dbReadOnlyConnectionString": "postgres://postgres:postgres@docker.data/infrastructure?sslmode=disable",
-    "cacheByMinutes":120,
+    "cacheByMinutes":5,
+    "RollbackVersionID":"",
     "redis": {
         "hosts": "docker.data:6379",
         "password": "",
