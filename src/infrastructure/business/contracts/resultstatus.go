@@ -12,3 +12,17 @@ const (
 	BadLogic
 	Error
 )
+
+func (status ResultStatus) String() string {
+	names := []string{
+		"Success",
+		"NotFound",
+		"Forbidden",
+		"Unauthorized",
+		"Conflict",
+		"BadData",
+		"BadLogic",
+		"Error",
+	}
+	return names[int(status)-1]
+}

@@ -7,8 +7,10 @@ import (
 
 type IGithubTrendingService interface {
 	New(repo repositories.IRepository, repoReadOnly repositories.IRepositoryReadOnly) IGithubTrendingService
+	IsTitleExists(title string) (exists bool, err error)
 	SaveToDB(trending *m.GitTrendingAll) (exists bool, err error)
 }
+
 type GithubTrendingService struct {
 	Repository         repositories.IRepository         `inject:"IRepository"`
 	RepositoryReadOnly repositories.IRepositoryReadOnly `inject:"IRepositoryReadOnly"`
@@ -20,10 +22,16 @@ func (s *GithubTrendingService) New(repo repositories.IRepository, repoReadOnly 
 	return &GithubTrendingService{repo, repoReadOnly}
 }
 
+func (s *GithubTrendingService) IsTitleExists(title string) (exists bool, err error) {
+	entity := &m.GitRepoTrending{}
+	exists, err = s.RepositoryReadOnly.Exists(entity, "title=?", title)
+	return
+}
+
 func (s *GithubTrendingService) SaveToDB(t *m.GitTrendingAll) (exists bool, err error) {
 	entity := &m.GitRepoTrending{}
-	exists, err = s.RepositoryReadOnly.Exists(entity, "title=?", t.Title)
-	if exists {
+	exists, err = s.IsTitleExists(t.Title)
+	if err != nil || exists {
 		return
 	}
 	dbNew := s.Repository.DB().NewTransaction()

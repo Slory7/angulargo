@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/slory7/angulargo/src/services"
 	api "github.com/slory7/angulargo/src/services/api/proto"
 	trending "github.com/slory7/angulargo/src/services/trending/proto"
 
@@ -19,14 +20,19 @@ import (
 
 func StartRpc() {
 	service := micro.NewService(
-		micro.Name("angulargo.micro.srv.api"),
+		micro.Name(services.ServiceNameApi),
 	)
 
 	service.Init()
 
-	api.RegisterAPIHandler(service.Server(), &APISrv{service.Client()})
+	err := api.RegisterAPIHandler(service.Server(), &APISrv{service.Client()})
 
-	service.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := service.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 type APISrv struct {

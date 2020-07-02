@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/slory7/angulargo/src/infrastructure/app"
+	"github.com/slory7/angulargo/src/infrastructure/business/contracts"
+	"github.com/slory7/angulargo/src/services"
 	gather "github.com/slory7/angulargo/src/services/gather/proto"
 	m "github.com/slory7/angulargo/src/services/trending/datamodels"
 	trending "github.com/slory7/angulargo/src/services/trending/proto"
@@ -16,23 +17,27 @@ import (
 	"github.com/nuveo/log"
 
 	"github.com/jinzhu/copier"
+	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/client"
-
-	micro "github.com/micro/go-micro"
 	"github.com/micro/go-micro/metadata"
+
 	"golang.org/x/net/trace"
 )
 
 func StartRpc() {
 	service := micro.NewService(
-		micro.Name("angulargo.micro.srv.trending"),
+		micro.Name(services.ServiceNameTrending),
 	)
 
 	service.Init()
 
-	trending.RegisterTrendingHandler(service.Server(), &TrendingSrv{service.Client()})
-
-	service.Run()
+	err := trending.RegisterTrendingHandler(service.Server(), &TrendingSrv{service.Client()})
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := service.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 type TrendingSrv struct {
@@ -52,22 +57,33 @@ func (s *TrendingSrv) GetGithubTrending(ctx context.Context, req *trending.Reque
 }
 
 func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trending.Request, rsp *trending.GithubTrendingInfo) error {
+	serv, err := app.Instance.GetIoCInstance((*githubtrending.IGithubTrendingService)(nil))
+	if err != nil {
+		return err
+	}
+	tServ := serv.(githubtrending.IGithubTrendingService)
+
+	t := time.Now()
+	title := t.Format("Monday, 2 January 2006")
+	exists, err := tServ.IsTitleExists(title)
+	if err != nil {
+		return err
+	}
+	if exists {
+		return contracts.NewBizError("Same title is already exist: "+title, contracts.Conflict)
+	}
+
 	data, err := s.getGithubTrendingInternal(ctx)
 	if err != nil {
 		return err
 	}
 
-	serv, err2 := app.Instance.GetIoCInstance((*githubtrending.IGithubTrendingService)(nil))
-	if err2 != nil {
-		return err2
-	}
-	tServ := serv.(githubtrending.IGithubTrendingService)
-	exists, err3 := tServ.SaveToDB(&data)
-	if err3 != nil {
-		return err3
+	exists, err = tServ.SaveToDB(&data)
+	if err != nil {
+		return err
 	}
 	if exists {
-		return errors.New("Same title is already exist")
+		return contracts.NewBizError("Same title is already exist: "+data.Title, contracts.Conflict)
 	}
 
 	rsp.Title = data.Title

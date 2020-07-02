@@ -3,4 +3,4 @@ version: '3'
 networks:
  default:
   external:
-    name: ${NETWORK-angular_default}
+    name: ${NETWORK-app_default}

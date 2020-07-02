@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/slory7/angulargo/src/infrastructure/framework/net/httpclient"
+	"github.com/slory7/angulargo/src/services"
 	gather "github.com/slory7/angulargo/src/services/gather/proto"
 
 	"github.com/nuveo/log"
@@ -17,14 +18,19 @@ import (
 
 func main() {
 	service := micro.NewService(
-		micro.Name("angulargo.micro.srv.gather"),
+		micro.Name(services.ServiceNameGather),
 	)
 
 	service.Init()
 
-	gather.RegisterGatherHandler(service.Server(), &GatherSrv{})
+	err := gather.RegisterGatherHandler(service.Server(), &GatherSrv{})
 
-	service.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := service.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 type GatherSrv struct {

@@ -1,41 +1,30 @@
 version: '3'
 
 services:
-  consul-agent-1: &consul-agent
-    image: consul:latest    
-    command: "agent -retry-join consul-server-bootstrap -client 0.0.0.0"
-
-  consul-agent-2:
-    <<: *consul-agent
-
-  consul-agent-3:
-    <<: *consul-agent
-
-  consul-server-1: &consul-server
-    <<: *consul-agent
-    command: "agent -server -retry-join consul-server-bootstrap -client 0.0.0.0"
-
-  consul-server-2:
-    <<: *consul-server
-
-  consul-server-bootstrap:
-    <<: *consul-agent
-    ports:
-      - "8400:8400"
-      - "8500:8500"
-      - "8600:8600"
-      - "8600:8600/udp"
-    command: "agent -server -bootstrap-expect 3 -ui -client 0.0.0.0"
+  etcd:
+    image: 'bitnami/etcd:latest'
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    #ports:
+    #  - 2379:2379
+    #  - 2380:2380
+    volumes:
+      - etcd_data:/bitnami
+    networks:
+      - frontend
 
   angulargo.api:
     image: angulargo-api:${TAG:-latest}
     build: 
       context: .
       dockerfile: ./src/services/api/Dockerfile
-    command: --registry_address=consul-server-bootstrap:8500
-    links:
-      - consul-server-bootstrap
+    command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=etcd:2379
+    depends_on:
+      - etcd
       - angulargo.trending
+    networks:
+      - frontend
     restart: "unless-stopped"
 
   angulargo.trending:
@@ -43,23 +32,27 @@ services:
     build:
       context: .
       dockerfile: ./src/services/trending/Dockerfile
-    command: --registry_address=consul-server-bootstrap:8500
-    links:
-      - consul-server-bootstrap
-      - angulargo.gather      
+    command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=etcd:2379
+    depends_on: 
+      - etcd    
+      - angulargo.gather
+      - "postgres.data"
+      - "redis.data"
+    networks:
+      - frontend
+      - backend
     restart: "unless-stopped"
-    depends_on:     
-     - "postgres.data"
-     - "redis.data"
 
   angulargo.gather:
     image: angulargo-gather:${TAG:-latest}
     build: 
       context: .
       dockerfile: ./src/services/gather/Dockerfile
-    command: --registry_address=consul-server-bootstrap:8500
-    links:
-      - consul-server-bootstrap     
+    command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=etcd:2379
+    depends_on:
+      - etcd
+    networks:      
+      - frontend
     restart: "unless-stopped"
 
   angulargo.schedule:
@@ -67,35 +60,52 @@ services:
     build: 
       context: .
       dockerfile: ./src/services/schedule/Dockerfile
-    command: --registry_address=consul-server-bootstrap:8500
-    links:
-      - consul-server-bootstrap
+    command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=etcd:2379
+    depends_on:
+      - etcd
       - angulargo.trending
+    networks:      
+      - frontend
     restart: "unless-stopped"
 
   postgres.data:
     image: postgres:alpine    
     environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=angulargo
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-angulargo}
+    volumes: 
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - backend  
     restart: "unless-stopped"
 
   redis.data:
    image: redis:alpine 
+   networks:
+      - backend     
    restart: "unless-stopped"
 
-  micro:    
-    command: --registry_address=consul-server-bootstrap:8500  api --handler=rpc
+  micro.api:    
+    command: --registry=etcd --registry_address=etcd:2379 api --handler=rpc
     environment:
       - VIRTUAL_HOST=${API_EXTERNAL_DNS_NAME_OR_IP}
-    image: microhq/micro:latest
-    links:
-      - consul-server-bootstrap
+    image: micro/micro:v2.0.0
+    depends_on:      
       - angulargo.api
+      - etcd
     ports:
       - "8080:8080"
+    networks:
+      - default
+      - frontend
+    restart: "unless-stopped"
+
+volumes:
+  etcd_data:
+  postgres-data:
 
 networks:
-  default:
-    external:
-      name: ${NETWORK-angulargo_consul_default}
+  default:    
+  frontend:
+  backend:

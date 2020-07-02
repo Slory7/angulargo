@@ -19,7 +19,7 @@ func HttpToBizStatus(httpStatus int) (result ResultStatus) {
 		result = BadData
 	case httpStatus == 401:
 		result = Unauthorized
-	case httpStatus >= 300:
+	case httpStatus >= 400:
 		result = Error
 	}
 	return
