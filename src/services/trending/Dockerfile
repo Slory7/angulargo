@@ -7,10 +7,11 @@ RUN apk add -U --no-cache ca-certificates
 RUN mkdir /build 
 WORKDIR /build
 
-ADD ./src ./src
-ADD go.mod .
-ADD go.sum .
+COPY go.mod .
+COPY go.sum .
 RUN go mod download
+
+COPY ./src ./src
 
 WORKDIR /build/src/services/trending
 
