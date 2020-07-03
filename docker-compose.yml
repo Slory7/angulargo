@@ -13,6 +13,7 @@ services:
       - etcd_data:/bitnami
     networks:
       - frontend
+    restart: "unless-stopped"
 
   angulargo.api:
     image: angulargo-api:${TAG:-latest}

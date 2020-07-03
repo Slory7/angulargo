@@ -38,9 +38,10 @@ func main() {
 	log.Println("Run getherTrending first")
 	retryFunc(gatherFunc, "getherTrending", 8)
 
+	log.Printf("Start getherTrending schedule, wait for %d seconds...\n", glbConfig.IntervalSeconds)
 	tick := time.NewTicker(time.Second * time.Duration(glbConfig.IntervalSeconds))
 	for range tick.C {
-		log.Println("Run getherTrending scheduled")
+		log.Printf("Run getherTrending scheduled, interval: %d seconds\n", glbConfig.IntervalSeconds)
 		go retryFunc(gatherFunc, "getherTrending", 8)
 	}
 }
@@ -56,6 +57,8 @@ func retryFunc(do func() error, logname string, count int) {
 		if err := do(); err == nil {
 			log.Printf("Try %v done\n", logname)
 			break
+		}else if i==count-1{
+			log.Printf("Try %v failed\n", logname)
 		}
 	}
 }
