@@ -5,6 +5,7 @@ import (
 	"errors"
 	"strconv"
 
+	"github.com/slory7/angulargo/src/infrastructure/app"
 	"github.com/slory7/angulargo/src/infrastructure/framework/net/httpclient"
 	"github.com/slory7/angulargo/src/services"
 	gather "github.com/slory7/angulargo/src/services/gather/proto"
@@ -17,6 +18,11 @@ import (
 )
 
 func main() {
+	log.Printf("%s is running...\n", services.ServiceNameGather)
+
+	app.InitAppInstance(nil)
+	app.Instance.RegisterIoC(nil)
+
 	service := micro.NewService(
 		micro.Name(services.ServiceNameGather),
 	)
@@ -31,6 +37,7 @@ func main() {
 	if err := service.Run(); err != nil {
 		log.Fatal(err)
 	}
+
 }
 
 type GatherSrv struct {
@@ -47,7 +54,8 @@ func (s *GatherSrv) GetHttpContent(ctx context.Context, req *gather.Request, rsp
 	log.Printf("fromName %s\n", md["Fromname"])
 	log.Printf("traceID %s\n", traceID)
 
-	result, err := httpclient.HttpSend(req.BaseUrl, req.RelativeUrl, req.UrlParams, req.Headers, req.ContentType, req.Method, req.PostData, httpclient.TokenEmpty, traceID, false, req.TimeOut)
+	httpClient := app.Instance.GetIoCInstanceMust((*httpclient.IHttpClient)(nil)).(httpclient.IHttpClient)
+	result, err := httpClient.HttpSend(req.BaseUrl, req.RelativeUrl, req.UrlParams, req.Headers, req.ContentType, req.Method, req.PostData, httpclient.TokenEmpty, traceID, false, req.TimeOut)
 
 	if err != nil {
 		return err

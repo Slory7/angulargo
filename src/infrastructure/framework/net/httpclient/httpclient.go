@@ -12,37 +12,41 @@ import (
 	"github.com/nuveo/log"
 )
 
-func HttpGetShort(baseUrl string, relativeUrl string, timeout int32) (result HttpResult, err error) {
-	return HttpSend(baseUrl, relativeUrl, nil, nil, "", "GET", "", TokenEmpty, "", false, timeout)
+type HttpClient struct{}
+
+var _ IHttpClient = (*HttpClient)(nil)
+
+func (c *HttpClient) HttpGetShort(baseUrl string, relativeUrl string, timeout int32) (result HttpResult, err error) {
+	return c.HttpSend(baseUrl, relativeUrl, nil, nil, "", "GET", "", TokenEmpty, "", false, timeout)
 }
 
-func HttpGet(baseUrl string, relativeUrl string, token TokenInfo, xRequestID string, isSecure bool, timeout int32) (result HttpResult, err error) {
-	return HttpSend(baseUrl, relativeUrl, nil, nil, "", "GET", "", token, xRequestID, isSecure, timeout)
+func (c *HttpClient) HttpGet(baseUrl string, relativeUrl string, token TokenInfo, xRequestID string, isSecure bool, timeout int32) (result HttpResult, err error) {
+	return c.HttpSend(baseUrl, relativeUrl, nil, nil, "", "GET", "", token, xRequestID, isSecure, timeout)
 }
 
 //HttpPostShort Json
-func HttpPostShort(baseUrl string, relativeUrl string, postJsonData string, timeout int32) (result HttpResult, err error) {
-	return HttpSend(baseUrl, relativeUrl, nil, nil, APPLICATION_JSON, "POST", postJsonData, TokenEmpty, "", false, timeout)
+func (c *HttpClient) HttpPostShort(baseUrl string, relativeUrl string, postJsonData string, timeout int32) (result HttpResult, err error) {
+	return c.HttpSend(baseUrl, relativeUrl, nil, nil, APPLICATION_JSON, "POST", postJsonData, TokenEmpty, "", false, timeout)
 }
 
 //HttpPost Json
-func HttpPost(baseUrl string, relativeUrl string, postJsonData string, token TokenInfo, xRequestID string, isSecure bool, timeout int32) (result HttpResult, err error) {
-	return HttpSend(baseUrl, relativeUrl, nil, nil, APPLICATION_JSON, "POST", postJsonData, token, xRequestID, isSecure, timeout)
+func (c *HttpClient) HttpPost(baseUrl string, relativeUrl string, postJsonData string, token TokenInfo, xRequestID string, isSecure bool, timeout int32) (result HttpResult, err error) {
+	return c.HttpSend(baseUrl, relativeUrl, nil, nil, APPLICATION_JSON, "POST", postJsonData, token, xRequestID, isSecure, timeout)
 }
 
-func HttpPostForm(baseUrl string, relativeUrl string, postData map[string]string, token TokenInfo, xRequestID string, isSecure bool, timeout int32) (result HttpResult, err error) {
-	return HttpSend(baseUrl, relativeUrl, nil, nil, FORM, "POST", BuildRequestParameters(postData), token, xRequestID, isSecure, timeout)
+func (c *HttpClient) HttpPostForm(baseUrl string, relativeUrl string, postData map[string]string, token TokenInfo, xRequestID string, isSecure bool, timeout int32) (result HttpResult, err error) {
+	return c.HttpSend(baseUrl, relativeUrl, nil, nil, FORM, "POST", BuildRequestParameters(postData), token, xRequestID, isSecure, timeout)
 }
 
-func HttpDelete(baseUrl string, relativeUrl string, token TokenInfo, xRequestID string, isSecure bool, timeout int32) (result HttpResult, err error) {
-	return HttpSend(baseUrl, relativeUrl, nil, nil, "", "DELETE", "", token, xRequestID, isSecure, timeout)
+func (c *HttpClient) HttpDelete(baseUrl string, relativeUrl string, token TokenInfo, xRequestID string, isSecure bool, timeout int32) (result HttpResult, err error) {
+	return c.HttpSend(baseUrl, relativeUrl, nil, nil, "", "DELETE", "", token, xRequestID, isSecure, timeout)
 }
 
-func HttpPut(baseUrl string, relativeUrl string, postJsonData string, token TokenInfo, xRequestID string, isSecure bool, timeout int32) (result HttpResult, err error) {
-	return HttpSend(baseUrl, relativeUrl, nil, nil, APPLICATION_JSON, "PUT", postJsonData, token, xRequestID, isSecure, timeout)
+func (c *HttpClient) HttpPut(baseUrl string, relativeUrl string, postJsonData string, token TokenInfo, xRequestID string, isSecure bool, timeout int32) (result HttpResult, err error) {
+	return c.HttpSend(baseUrl, relativeUrl, nil, nil, APPLICATION_JSON, "PUT", postJsonData, token, xRequestID, isSecure, timeout)
 }
 
-func HttpSend(baseUrl string, relativeUrl string, urlParams map[string]string, headers map[string]string, contentType string, method string, postData string, token TokenInfo, xRequestID string, isSecure bool, timeout int32) (result HttpResult, err error) {
+func (*HttpClient) HttpSend(baseUrl string, relativeUrl string, urlParams map[string]string, headers map[string]string, contentType string, method string, postData string, token TokenInfo, xRequestID string, isSecure bool, timeout int32) (result HttpResult, err error) {
 	startTime := time.Now()
 	url := baseUrl + relativeUrl
 	if urlParams != nil {
