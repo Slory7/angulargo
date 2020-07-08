@@ -12,6 +12,7 @@ services:
     volumes:
       - etcd_data:/bitnami
     networks:
+      - default
       - frontend
     restart: "unless-stopped"
 
@@ -25,6 +26,7 @@ services:
       - etcd
       - angulargo.trending
     networks:
+      - default
       - frontend
     restart: "unless-stopped"
 
@@ -69,6 +71,20 @@ services:
       - frontend
     restart: "unless-stopped"
 
+  micro.api:    
+    command: --registry=etcd --registry_address=etcd:2379 --auth_namespace=angulargo.micro api --namespace=angulargo.micro --handler=rpc
+    environment:
+      - VIRTUAL_HOST=${API_EXTERNAL_DNS_NAME_OR_IP}
+    image: micro/micro:v2.0.0
+    depends_on:      
+      - angulargo.api
+      - etcd
+    ports:
+      - "8080:8080"
+    networks:
+      - default      
+    restart: "unless-stopped"
+
   postgres.data:
     image: postgres:alpine    
     environment:
@@ -86,22 +102,7 @@ services:
    networks:
       - backend     
    restart: "unless-stopped"
-
-  micro.api:    
-    command: --registry=etcd --registry_address=etcd:2379 api --handler=rpc
-    environment:
-      - VIRTUAL_HOST=${API_EXTERNAL_DNS_NAME_OR_IP}
-    image: micro/micro:v2.0.0
-    depends_on:      
-      - angulargo.api
-      - etcd
-    ports:
-      - "8080:8080"
-    networks:
-      - default
-      - frontend
-    restart: "unless-stopped"
-
+ 
 volumes:
   etcd_data:
   postgres-data:

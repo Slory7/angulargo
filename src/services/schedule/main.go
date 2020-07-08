@@ -5,6 +5,7 @@ import (
 	"errors"
 	"math"
 
+	"github.com/slory7/angulargo/src/services"
 	trending "github.com/slory7/angulargo/src/services/trending/proto"
 
 	"time"
@@ -16,9 +17,9 @@ import (
 	"github.com/nuveo/log"
 
 	"github.com/google/uuid"
-	"github.com/micro/go-micro"
-	"github.com/micro/go-micro/client"
-	"github.com/micro/go-micro/metadata"
+	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-micro/v2/client"
+	"github.com/micro/go-micro/v2/metadata"
 	"golang.org/x/net/trace"
 )
 
@@ -57,7 +58,7 @@ func retryFunc(do func() error, logname string, count int) {
 		if err := do(); err == nil {
 			log.Printf("Try %v done\n", logname)
 			break
-		}else if i==count-1{
+		} else if i == count-1 {
 			log.Printf("Try %v failed\n", logname)
 		}
 	}
@@ -79,7 +80,7 @@ func getherTrending(c client.Client) error {
 	ctx = metadata.NewContext(ctx, md)
 
 	log.Printf("traceID %s\n", traceID)
-	trendingClient := trending.NewTrendingService("angulargo.micro.srv.trending", c)
+	trendingClient := trending.NewTrendingService(services.ServiceNameTrending, c)
 	req := &trending.Request{}
 	timeoutOpt := client.WithRequestTimeout(15 * time.Second)
 	result, err := trendingClient.GetAndSaveGithubTrending(ctx, req, timeoutOpt)

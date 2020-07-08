@@ -12,14 +12,12 @@ import (
 	trending "github.com/slory7/angulargo/src/services/trending/proto"
 	"github.com/slory7/angulargo/src/services/trending/services/githubtrending"
 
-	"github.com/golang/protobuf/ptypes"
-
 	"github.com/nuveo/log"
 
-	"github.com/jinzhu/copier"
-	"github.com/micro/go-micro"
-	"github.com/micro/go-micro/client"
-	"github.com/micro/go-micro/metadata"
+	"github.com/slory7/copier"
+	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-micro/v2/client"
+	"github.com/micro/go-micro/v2/metadata"
 
 	"golang.org/x/net/trace"
 )
@@ -45,27 +43,34 @@ type TrendingSrv struct {
 }
 
 func (s *TrendingSrv) GetGithubTrending(ctx context.Context, req *trending.Request, rsp *trending.GithubTrendingInfo) error {
+	srv := app.Instance.GetIoCInstanceMust((*githubtrending.IGithubTrendingService)(nil)).(githubtrending.IGithubTrendingService)
+	info, b, err := srv.GetTrendingInfo(req.Title)
+	if err != nil {
+		return err
+	}
+	if !b {
+		return contracts.NewBizError("Trending info does not exist.", contracts.NotFound)
+	}
+	copier.Copy(rsp, info)
+	//rsp.TrendingDate, _ = ptypes.TimestampProto(info.TrendingDate)
+	return nil
+}
+
+func (s *TrendingSrv) FetchGithubTrending(ctx context.Context, req *trending.Empty, rsp *trending.GithubTrendingInfo) error {
 	data, err := s.getGithubTrendingInternal(ctx)
 	if err != nil {
 		return err
 	}
-	rsp.Title = data.Title
-	rsp.TrendingDate, _ = ptypes.TimestampProto(data.TrendingDate)
-	copier.Copy(&rsp.GitRepos, &data.GitRepos)
-
+	copier.Copy(rsp, data)
 	return nil
 }
 
 func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trending.Request, rsp *trending.GithubTrendingInfo) error {
-	serv, err := app.Instance.GetIoCInstance((*githubtrending.IGithubTrendingService)(nil))
-	if err != nil {
-		return err
-	}
-	tServ := serv.(githubtrending.IGithubTrendingService)
+	srv := app.Instance.GetIoCInstanceMust((*githubtrending.IGithubTrendingService)(nil)).(githubtrending.IGithubTrendingService)
 
 	t := time.Now()
 	title := t.Format("Monday, 2 January 2006")
-	exists, err := tServ.IsTitleExists(title)
+	exists, err := srv.IsTitleExists(title)
 	if err != nil {
 		return err
 	}
@@ -78,18 +83,14 @@ func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trendin
 		return err
 	}
 
-	exists, err = tServ.SaveToDB(&data)
+	exists, err = srv.SaveToDB(&data)
 	if err != nil {
 		return err
 	}
 	if exists {
 		return contracts.NewBizError("Same title is already exist: "+data.Title, contracts.Conflict)
 	}
-
-	rsp.Title = data.Title
-	rsp.TrendingDate, _ = ptypes.TimestampProto(data.TrendingDate)
-	copier.Copy(&rsp.GitRepos, &data.GitRepos)
-
+	copier.Copy(rsp, data)
 	return nil
 }
 
@@ -104,7 +105,7 @@ func (s *TrendingSrv) getGithubTrendingInternal(ctx context.Context) (data m.Git
 	log.Printf("fromName %s\n", md["Fromname"])
 	log.Printf("traceID %s\n", traceID)
 
-	gatherClient := gather.NewGatherService("angulargo.micro.srv.gather", s.Client)
+	gatherClient := gather.NewGatherService(services.ServiceNameGather, s.Client)
 	rpcReq := &gather.Request{BaseUrl: glbConfig.TrendingURL, Method: "GET", TimeOut: 5}
 	result, err := gatherClient.GetHttpContent(ctx, rpcReq)
 	if err != nil {

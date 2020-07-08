@@ -2,14 +2,19 @@ syntax = "proto3";
 
 package trending;
 
-import  "github.com/golang/protobuf/ptypes/timestamp/timestamp.proto";
+import  "github.com/protobuf/src/google/protobuf/timestamp.proto";
 
 service Trending{
     rpc GetGithubTrending(Request) returns (GithubTrendingInfo);
+    rpc FetchGithubTrending(Empty) returns (GithubTrendingInfo);
     rpc GetAndSaveGithubTrending(Request) returns (GithubTrendingInfo);
 }
 
+message Empty{    
+}
+
 message Request{
+    string Title = 1;
 }
 
 message GithubTrendingInfo{

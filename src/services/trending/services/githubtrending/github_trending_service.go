@@ -8,6 +8,7 @@ import (
 type IGithubTrendingService interface {
 	New(repo repositories.IRepository, repoReadOnly repositories.IRepositoryReadOnly) IGithubTrendingService
 	IsTitleExists(title string) (exists bool, err error)
+	GetTrendingInfo(title string) (info m.GitTrendingAll, exists bool, err error)
 	SaveToDB(trending *m.GitTrendingAll) (exists bool, err error)
 }
 
@@ -25,6 +26,18 @@ func (s *GithubTrendingService) New(repo repositories.IRepository, repoReadOnly 
 func (s *GithubTrendingService) IsTitleExists(title string) (exists bool, err error) {
 	entity := &m.GitRepoTrending{}
 	exists, err = s.RepositoryReadOnly.Exists(entity, "title=?", title)
+	return
+}
+
+func (s *GithubTrendingService) GetTrendingInfo(title string) (info m.GitTrendingAll, exists bool, err error) {
+	entity := &m.GitRepoTrending{Title: title}
+	exists, err = s.RepositoryReadOnly.Get(entity)
+	if exists {
+		entity2 := []*m.GitRepo{}
+		err = s.RepositoryReadOnly.List(&entity2, "", &m.GitRepo{GitTrendingID: entity.Id})
+		info.GitRepoTrending = *entity
+		info.GitRepos = entity2
+	}
 	return
 }
 

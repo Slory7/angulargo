@@ -13,8 +13,8 @@ import (
 	"github.com/nuveo/log"
 	"golang.org/x/net/trace"
 
-	micro "github.com/micro/go-micro"
-	"github.com/micro/go-micro/metadata"
+	micro "github.com/micro/go-micro/v2"
+	"github.com/micro/go-micro/v2/metadata"
 )
 
 func main() {

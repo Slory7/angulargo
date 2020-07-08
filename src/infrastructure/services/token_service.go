@@ -64,7 +64,8 @@ func (s *TokenService) GetToken() (token httpclient.TokenInfo, err error) {
 		"username":      s.userName,
 		"password":      s.passWord,
 	}
-	result, err := httpclient.HttpPostForm(s.baseURL, s.tokenRelativeURL, formData, httpclient.TokenEmpty, "", true, 5)
+	srv := app.Instance.GetIoCInstanceMust((*httpclient.IHttpClient)(nil)).(httpclient.IHttpClient)
+	result, err := srv.HttpPostForm(s.baseURL, s.tokenRelativeURL, formData, httpclient.TokenEmpty, "", true, 5)
 	if err == nil && result.IsSuccess {
 		var tResult tokenResult
 		if err = json.Unmarshal([]byte(result.Content), &tResult); err == nil {
