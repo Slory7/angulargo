@@ -15,7 +15,7 @@ require (
 	github.com/golang/protobuf v1.4.2
 	github.com/google/go-cmp v0.5.0 // indirect
 	github.com/google/uuid v1.1.1
-	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a
+	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a // indirect
 	github.com/jwells131313/dargo v1.0.0
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/lib/pq v1.7.0
