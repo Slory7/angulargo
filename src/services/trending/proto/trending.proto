@@ -2,12 +2,15 @@ syntax = "proto3";
 
 package trending;
 
-import  "github.com/protobuf/src/google/protobuf/timestamp.proto";
+import  "github.com/protocolbuffers/protobuf/src/google/protobuf/timestamp.proto";
 
 service Trending{
+    // Get trending
     rpc GetGithubTrending(Request) returns (GithubTrendingInfo);
+    // Fetch today's trending from web
     rpc FetchGithubTrending(Empty) returns (GithubTrendingInfo);
-    rpc GetAndSaveGithubTrending(Request) returns (GithubTrendingInfo);
+    // Get today's trending, if not exists, fetch and save it
+    rpc GetAndSaveGithubTrending(Empty) returns (GithubTrendingInfo);
 }
 
 message Empty{    

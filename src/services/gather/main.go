@@ -44,7 +44,9 @@ type GatherSrv struct {
 func (s *GatherSrv) GetHttpContent(ctx context.Context, req *gather.Request, rsp *gather.Result) error {
 	services.PrintTrace(ctx, "GetHttpContent")
 
+	traceID, _ := services.GetTrace(ctx)
 	httpClient := app.Instance.GetIoCInstanceMust((*httpclient.IHttpClient)(nil)).(httpclient.IHttpClient)
+
 	result, err := httpClient.HttpSend(req.BaseUrl, req.RelativeUrl, req.UrlParams, req.Headers, req.ContentType, req.Method, req.PostData, httpclient.TokenEmpty, traceID, false, req.TimeOut)
 
 	if err != nil {

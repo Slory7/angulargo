@@ -18,23 +18,31 @@ const (
 	ServiceNameApi      string = "angulargo.micro.api.api"
 )
 
-func PrintTrace(ctx context.Context, localMethodName string) {
-	md, _ := metadata.FromContext(ctx)
-	traceID := md["Traceid"]
+func GetTrace(ctx context.Context) (traceID, fromName string) {
+	md, ok := metadata.FromContext(ctx)
+	if !ok {
+		return
+	}
+	traceID = md["Traceid"]
+	fromName = md["Fromname"]
+	return
+}
 
+func PrintTrace(ctx context.Context, localMethodName string) {
+	traceID, fromName := GetTrace(ctx)
 	if tr, ok := trace.FromContext(ctx); ok {
-		tr.LazyPrintf("fromName: %s", md["Fromname"])
+		tr.LazyPrintf("fromName: %s", fromName)
 		tr.LazyPrintf("traceID: %s", traceID)
 		tr.LazyPrintf("localMethodName: %s", localMethodName)
 	}
-	log.Printf("fromName: %s\n", md["Fromname"])
+	log.Printf("fromName: %s\n", fromName)
 	log.Printf("traceID: %s\n", traceID)
 	log.Printf("localMethodName: %s\n", localMethodName)
 }
 
 func GetContextWithTrace(ctx context.Context, fromNameIfEmpty string) context.Context {
-	md, _ := metadata.FromContext(ctx)
-	if md == nil {
+	md, ok := metadata.FromContext(ctx)
+	if !ok {
 		md = metadata.Metadata{}
 	}
 	traceID := md["X-Request-Id"]

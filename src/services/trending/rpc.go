@@ -56,7 +56,7 @@ func (s *TrendingSrv) GetGithubTrending(ctx context.Context, req *trending.Reque
 
 func (s *TrendingSrv) FetchGithubTrending(ctx context.Context, req *trending.Empty, rsp *trending.GithubTrendingInfo) error {
 	services.PrintTrace(ctx, "FetchGithubTrending")
-	data, err := s.getGithubTrendingInternal(ctx)
+	data, err := s.fetchGithubTrendingInternal(ctx)
 	if err != nil {
 		return err
 	}
@@ -64,21 +64,22 @@ func (s *TrendingSrv) FetchGithubTrending(ctx context.Context, req *trending.Emp
 	return nil
 }
 
-func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trending.Request, rsp *trending.GithubTrendingInfo) error {
+func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trending.Empty, rsp *trending.GithubTrendingInfo) error {
 	services.PrintTrace(ctx, "GetAndSaveGithubTrending")
-	srv := app.Instance.GetIoCInstanceMust((*githubtrending.IGithubTrendingService)(nil)).(githubtrending.IGithubTrendingService)
 
-	t := time.Now()
-	title := t.Format("Monday, 2 January 2006")
-	exists, err := srv.IsTitleExists(title)
+	srv := app.Instance.GetIoCInstanceMust((*githubtrending.IGithubTrendingService)(nil)).(githubtrending.IGithubTrendingService)
+	title := time.Now().Format("Monday, 2 January 2006")
+
+	info, exists, err := srv.GetTrendingInfo(title)
 	if err != nil {
 		return err
 	}
 	if exists {
-		return services.ToMicroError(contracts.NewBizError("Same title is already exist: "+title, contracts.Conflict))
+		copier.Copy(rsp, info)
+		return nil
 	}
 
-	data, err := s.getGithubTrendingInternal(ctx)
+	data, err := s.fetchGithubTrendingInternal(ctx)
 	if err != nil {
 		return err
 	}
@@ -94,7 +95,7 @@ func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trendin
 	return nil
 }
 
-func (s *TrendingSrv) getGithubTrendingInternal(ctx context.Context) (data m.GitTrendingAll, err error) {
+func (s *TrendingSrv) fetchGithubTrendingInternal(ctx context.Context) (data m.GitTrendingAll, err error) {
 	gatherClient := gather.NewGatherService(services.ServiceNameGather, s.Client)
 	rpcReq := &gather.Request{BaseUrl: glbConfig.TrendingURL, Method: "GET", TimeOut: 5}
 	result, err := gatherClient.GetHttpContent(ctx, rpcReq)
@@ -103,11 +104,7 @@ func (s *TrendingSrv) getGithubTrendingInternal(ctx context.Context) (data m.Git
 		return data, err
 	}
 
-	serv, err := app.Instance.GetIoCInstance((*githubtrending.IGithubTrendingDocService)(nil))
-	if err != nil {
-		return data, err
-	}
-	docService := serv.(githubtrending.IGithubTrendingDocService)
+	docService := app.Instance.GetIoCInstanceMust((*githubtrending.IGithubTrendingDocService)(nil)).(githubtrending.IGithubTrendingDocService)
 	repos, err := docService.ParseDoc(result.Content)
 	if err != nil {
 		return data, err

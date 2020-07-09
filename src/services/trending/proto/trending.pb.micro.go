@@ -43,9 +43,12 @@ func NewTrendingEndpoints() []*api.Endpoint {
 // Client API for Trending service
 
 type TrendingService interface {
+	// Get trending
 	GetGithubTrending(ctx context.Context, in *Request, opts ...client.CallOption) (*GithubTrendingInfo, error)
+	// Fetch today's trending from web
 	FetchGithubTrending(ctx context.Context, in *Empty, opts ...client.CallOption) (*GithubTrendingInfo, error)
-	GetAndSaveGithubTrending(ctx context.Context, in *Request, opts ...client.CallOption) (*GithubTrendingInfo, error)
+	// Get today's trending, if not exists, fetch and save it
+	GetAndSaveGithubTrending(ctx context.Context, in *Empty, opts ...client.CallOption) (*GithubTrendingInfo, error)
 }
 
 type trendingService struct {
@@ -80,7 +83,7 @@ func (c *trendingService) FetchGithubTrending(ctx context.Context, in *Empty, op
 	return out, nil
 }
 
-func (c *trendingService) GetAndSaveGithubTrending(ctx context.Context, in *Request, opts ...client.CallOption) (*GithubTrendingInfo, error) {
+func (c *trendingService) GetAndSaveGithubTrending(ctx context.Context, in *Empty, opts ...client.CallOption) (*GithubTrendingInfo, error) {
 	req := c.c.NewRequest(c.name, "Trending.GetAndSaveGithubTrending", in)
 	out := new(GithubTrendingInfo)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -93,16 +96,19 @@ func (c *trendingService) GetAndSaveGithubTrending(ctx context.Context, in *Requ
 // Server API for Trending service
 
 type TrendingHandler interface {
+	// Get trending
 	GetGithubTrending(context.Context, *Request, *GithubTrendingInfo) error
+	// Fetch today's trending from web
 	FetchGithubTrending(context.Context, *Empty, *GithubTrendingInfo) error
-	GetAndSaveGithubTrending(context.Context, *Request, *GithubTrendingInfo) error
+	// Get today's trending, if not exists, fetch and save it
+	GetAndSaveGithubTrending(context.Context, *Empty, *GithubTrendingInfo) error
 }
 
 func RegisterTrendingHandler(s server.Server, hdlr TrendingHandler, opts ...server.HandlerOption) error {
 	type trending interface {
 		GetGithubTrending(ctx context.Context, in *Request, out *GithubTrendingInfo) error
 		FetchGithubTrending(ctx context.Context, in *Empty, out *GithubTrendingInfo) error
-		GetAndSaveGithubTrending(ctx context.Context, in *Request, out *GithubTrendingInfo) error
+		GetAndSaveGithubTrending(ctx context.Context, in *Empty, out *GithubTrendingInfo) error
 	}
 	type Trending struct {
 		trending
@@ -123,6 +129,6 @@ func (h *trendingHandler) FetchGithubTrending(ctx context.Context, in *Empty, ou
 	return h.TrendingHandler.FetchGithubTrending(ctx, in, out)
 }
 
-func (h *trendingHandler) GetAndSaveGithubTrending(ctx context.Context, in *Request, out *GithubTrendingInfo) error {
+func (h *trendingHandler) GetAndSaveGithubTrending(ctx context.Context, in *Empty, out *GithubTrendingInfo) error {
 	return h.TrendingHandler.GetAndSaveGithubTrending(ctx, in, out)
 }

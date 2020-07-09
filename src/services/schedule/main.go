@@ -69,7 +69,7 @@ func gatherTrending(c client.Client) error {
 	services.PrintTrace(ctx, "gatherTrending")
 
 	trendingClient := trending.NewTrendingService(services.ServiceNameTrending, c)
-	req := &trending.Request{}
+	req := &trending.Empty{}
 	timeoutOpt := client.WithRequestTimeout(15 * time.Second)
 	result, err := trendingClient.GetAndSaveGithubTrending(ctx, req, timeoutOpt)
 	if err != nil {
