@@ -30,5 +30,6 @@ func (er *BizError) Is(err error) bool {
 }
 
 func IsLikeBizError(err error) bool {
-	return strings.Contains(err.Error(), "Business Error(Status:")
+	s := err.Error()
+	return strings.Contains(s, "BizError") || strings.Contains(s, "Business Error(Status:")
 }

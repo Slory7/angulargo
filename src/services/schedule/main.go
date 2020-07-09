@@ -33,14 +33,14 @@ func main() {
 		return gatherTrending(client)
 	}
 
-	log.Println("Run getherTrending first")
-	retryFunc(gatherFunc, "getherTrending", 8)
+	log.Println("Run gatherTrending first")
+	retryFunc(gatherFunc, "gatherTrending", 8)
 
-	log.Printf("Start getherTrending schedule, wait for %d seconds...\n", glbConfig.IntervalSeconds)
+	log.Printf("Start gatherTrending schedule, wait for %d seconds...\n", glbConfig.IntervalSeconds)
 	tick := time.NewTicker(time.Second * time.Duration(glbConfig.IntervalSeconds))
 	for range tick.C {
-		log.Printf("Run getherTrending scheduled, interval: %d seconds\n", glbConfig.IntervalSeconds)
-		go retryFunc(gatherFunc, "getherTrending", 8)
+		log.Printf("Run gatherTrending scheduled, interval: %d seconds\n", glbConfig.IntervalSeconds)
+		go retryFunc(gatherFunc, "gatherTrending", 8)
 	}
 }
 
@@ -73,7 +73,7 @@ func gatherTrending(c client.Client) error {
 	timeoutOpt := client.WithRequestTimeout(15 * time.Second)
 	result, err := trendingClient.GetAndSaveGithubTrending(ctx, req, timeoutOpt)
 	if err != nil {
-		if errors. {
+		if errors.Is(err, contracts.BizErr) || contracts.IsLikeBizError(err) {
 			log.Println(err)
 			return nil
 		}
