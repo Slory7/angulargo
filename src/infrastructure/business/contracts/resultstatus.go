@@ -11,6 +11,7 @@ const (
 	BadData
 	BadLogic
 	Error
+	Timeout
 )
 
 func (status ResultStatus) String() string {
@@ -23,6 +24,7 @@ func (status ResultStatus) String() string {
 		"BadData",
 		"BadLogic",
 		"Error",
+		"Timeout",
 	}
 	return names[int(status)-1]
 }

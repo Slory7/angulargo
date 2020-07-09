@@ -7,19 +7,21 @@ import (
 func HttpToBizStatus(httpStatus int) (result ResultStatus) {
 	result = Success
 	switch {
-	case httpStatus == 404:
+	case httpStatus == http.StatusNotFound:
 		result = NotFound
-	case httpStatus == 409:
+	case httpStatus == http.StatusConflict:
 		result = Conflict
-	case httpStatus == 403:
+	case httpStatus == http.StatusForbidden:
 		result = Forbidden
-	case httpStatus == 422:
+	case httpStatus == http.StatusUnprocessableEntity:
 		result = BadLogic
-	case httpStatus == 400:
+	case httpStatus == http.StatusBadRequest:
 		result = BadData
-	case httpStatus == 401:
+	case httpStatus == http.StatusUnauthorized:
 		result = Unauthorized
-	case httpStatus >= 400:
+	case httpStatus == http.StatusRequestTimeout:
+		result = Timeout
+	case httpStatus >= http.StatusBadRequest:
 		result = Error
 	}
 	return
@@ -40,6 +42,8 @@ func BizStatusToHttp(status ResultStatus) (result int) {
 		result = http.StatusBadRequest
 	case status == Unauthorized:
 		result = http.StatusUnauthorized
+	case status == Timeout:
+		result = http.StatusRequestTimeout
 	case status == Error:
 		result = http.StatusInternalServerError
 	}

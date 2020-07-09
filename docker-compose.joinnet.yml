@@ -3,4 +3,4 @@ version: '3'
 networks:
  default:
   external:
-    name: ${NETWORK-app_default}
+    name: ${NETWORK-angulargo_default}

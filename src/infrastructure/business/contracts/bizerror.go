@@ -30,5 +30,5 @@ func (er *BizError) Is(err error) bool {
 }
 
 func IsLikeBizError(err error) bool {
-	return strings.HasPrefix(err.Error(), "Business Error(Status:")
+	return strings.Contains(err.Error(), "Business Error(Status:")
 }

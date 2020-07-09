@@ -1,21 +1,6 @@
 version: '3'
 
 services:
-  etcd:
-    image: 'bitnami/etcd:latest'
-    environment:
-      - ALLOW_NONE_AUTHENTICATION=yes
-      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
-    #ports:
-    #  - 2379:2379
-    #  - 2380:2380
-    volumes:
-      - etcd_data:/bitnami
-    networks:
-      - default
-      - frontend
-    restart: "unless-stopped"
-
   angulargo.api:
     image: angulargo-api:${TAG:-latest}
     build: 
@@ -26,8 +11,8 @@ services:
       - etcd
       - angulargo.trending
     networks:
-      - default
       - frontend
+      - default
     restart: "unless-stopped"
 
   angulargo.trending:
@@ -72,7 +57,7 @@ services:
     restart: "unless-stopped"
 
   micro.api:    
-    command: --registry=etcd --registry_address=etcd:2379 --auth_namespace=angulargo.micro api --namespace=angulargo.micro --handler=rpc
+    command: --registry=etcd --registry_address=etcd:2379 api --api_namespace=angulargo.micro.api --handler=rpc
     environment:
       - VIRTUAL_HOST=${API_EXTERNAL_DNS_NAME_OR_IP}
     image: micro/micro:v2.0.0
@@ -83,6 +68,21 @@ services:
       - "8080:8080"
     networks:
       - default      
+    restart: "unless-stopped"
+
+  etcd:
+    image: 'bitnami/etcd:latest'
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    #ports:
+    #  - 2379:2379
+    #  - 2380:2380
+    volumes:
+      - etcd_data:/bitnami
+    networks:
+      - default
+      - frontend
     restart: "unless-stopped"
 
   postgres.data:

@@ -11,10 +11,8 @@ import (
 	gather "github.com/slory7/angulargo/src/services/gather/proto"
 
 	"github.com/nuveo/log"
-	"golang.org/x/net/trace"
 
 	micro "github.com/micro/go-micro/v2"
-	"github.com/micro/go-micro/v2/metadata"
 )
 
 func main() {
@@ -44,15 +42,7 @@ type GatherSrv struct {
 }
 
 func (s *GatherSrv) GetHttpContent(ctx context.Context, req *gather.Request, rsp *gather.Result) error {
-	md, _ := metadata.FromContext(ctx)
-	traceID := md["Traceid"]
-
-	if tr, ok := trace.FromContext(ctx); ok {
-		tr.LazyPrintf("fromName %s", md["Fromname"])
-		tr.LazyPrintf("traceID %s", traceID)
-	}
-	log.Printf("fromName %s\n", md["Fromname"])
-	log.Printf("traceID %s\n", traceID)
+	services.PrintTrace(ctx, "GetHttpContent")
 
 	httpClient := app.Instance.GetIoCInstanceMust((*httpclient.IHttpClient)(nil)).(httpclient.IHttpClient)
 	result, err := httpClient.HttpSend(req.BaseUrl, req.RelativeUrl, req.UrlParams, req.Headers, req.ContentType, req.Method, req.PostData, httpclient.TokenEmpty, traceID, false, req.TimeOut)

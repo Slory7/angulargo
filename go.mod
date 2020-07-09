@@ -19,6 +19,7 @@ require (
 	github.com/jwells131313/dargo v1.0.0
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/lib/pq v1.7.0
+	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/nuveo/log v0.0.0-20190430190217-44d02db6bdf8
 	github.com/slory7/copier v0.0.0-20200708011830-7d27b23a2842

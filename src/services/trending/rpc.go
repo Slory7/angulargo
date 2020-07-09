@@ -14,12 +14,9 @@ import (
 
 	"github.com/nuveo/log"
 
-	"github.com/slory7/copier"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/client"
-	"github.com/micro/go-micro/v2/metadata"
-
-	"golang.org/x/net/trace"
+	"github.com/slory7/copier"
 )
 
 func StartRpc() {
@@ -43,13 +40,14 @@ type TrendingSrv struct {
 }
 
 func (s *TrendingSrv) GetGithubTrending(ctx context.Context, req *trending.Request, rsp *trending.GithubTrendingInfo) error {
+	services.PrintTrace(ctx, "GetGithubTrending")
 	srv := app.Instance.GetIoCInstanceMust((*githubtrending.IGithubTrendingService)(nil)).(githubtrending.IGithubTrendingService)
 	info, b, err := srv.GetTrendingInfo(req.Title)
 	if err != nil {
 		return err
 	}
 	if !b {
-		return contracts.NewBizError("Trending info does not exist.", contracts.NotFound)
+		return services.ToMicroError(contracts.NewBizError("Trending info does not exist: "+req.Title, contracts.NotFound))
 	}
 	copier.Copy(rsp, info)
 	//rsp.TrendingDate, _ = ptypes.TimestampProto(info.TrendingDate)
@@ -57,6 +55,7 @@ func (s *TrendingSrv) GetGithubTrending(ctx context.Context, req *trending.Reque
 }
 
 func (s *TrendingSrv) FetchGithubTrending(ctx context.Context, req *trending.Empty, rsp *trending.GithubTrendingInfo) error {
+	services.PrintTrace(ctx, "FetchGithubTrending")
 	data, err := s.getGithubTrendingInternal(ctx)
 	if err != nil {
 		return err
@@ -66,6 +65,7 @@ func (s *TrendingSrv) FetchGithubTrending(ctx context.Context, req *trending.Emp
 }
 
 func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trending.Request, rsp *trending.GithubTrendingInfo) error {
+	services.PrintTrace(ctx, "GetAndSaveGithubTrending")
 	srv := app.Instance.GetIoCInstanceMust((*githubtrending.IGithubTrendingService)(nil)).(githubtrending.IGithubTrendingService)
 
 	t := time.Now()
@@ -75,7 +75,7 @@ func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trendin
 		return err
 	}
 	if exists {
-		return contracts.NewBizError("Same title is already exist: "+title, contracts.Conflict)
+		return services.ToMicroError(contracts.NewBizError("Same title is already exist: "+title, contracts.Conflict))
 	}
 
 	data, err := s.getGithubTrendingInternal(ctx)
@@ -88,23 +88,13 @@ func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trendin
 		return err
 	}
 	if exists {
-		return contracts.NewBizError("Same title is already exist: "+data.Title, contracts.Conflict)
+		return services.ToMicroError(contracts.NewBizError("Same title is already exist: "+data.Title, contracts.Conflict))
 	}
 	copier.Copy(rsp, data)
 	return nil
 }
 
 func (s *TrendingSrv) getGithubTrendingInternal(ctx context.Context) (data m.GitTrendingAll, err error) {
-	md, _ := metadata.FromContext(ctx)
-	traceID := md["Traceid"]
-
-	if tr, ok := trace.FromContext(ctx); ok {
-		tr.LazyPrintf("fromName %s", md["Fromname"])
-		tr.LazyPrintf("traceID %s", traceID)
-	}
-	log.Printf("fromName %s\n", md["Fromname"])
-	log.Printf("traceID %s\n", traceID)
-
 	gatherClient := gather.NewGatherService(services.ServiceNameGather, s.Client)
 	rpcReq := &gather.Request{BaseUrl: glbConfig.TrendingURL, Method: "GET", TimeOut: 5}
 	result, err := gatherClient.GetHttpContent(ctx, rpcReq)

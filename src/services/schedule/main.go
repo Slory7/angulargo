@@ -16,11 +16,8 @@ import (
 
 	"github.com/nuveo/log"
 
-	"github.com/google/uuid"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/client"
-	"github.com/micro/go-micro/v2/metadata"
-	"golang.org/x/net/trace"
 )
 
 func main() {
@@ -33,7 +30,7 @@ func main() {
 	client := service.Client()
 
 	gatherFunc := func() error {
-		return getherTrending(client)
+		return gatherTrending(client)
 	}
 
 	log.Println("Run getherTrending first")
@@ -64,28 +61,19 @@ func retryFunc(do func() error, logname string, count int) {
 	}
 }
 
-func getherTrending(c client.Client) error {
-	tr := trace.New("schedule.v1", "Gather")
-	defer tr.Finish()
-
+func gatherTrending(c client.Client) error {
 	ctx := context.TODO()
 	// ctx, cancel := context.WithTimeout(ctx, time.Second*15)
 	// defer cancel()
+	ctx = services.GetContextWithTrace(ctx, "schedule.v1")
+	services.PrintTrace(ctx, "gatherTrending")
 
-	md := metadata.Metadata{}
-
-	traceID := uuid.New()
-	md["Traceid"] = traceID.String()
-	md["Fromname"] = "schedule.v1"
-	ctx = metadata.NewContext(ctx, md)
-
-	log.Printf("traceID %s\n", traceID)
 	trendingClient := trending.NewTrendingService(services.ServiceNameTrending, c)
 	req := &trending.Request{}
 	timeoutOpt := client.WithRequestTimeout(15 * time.Second)
 	result, err := trendingClient.GetAndSaveGithubTrending(ctx, req, timeoutOpt)
 	if err != nil {
-		if errors.Is(err, contracts.BizErr) || contracts.IsLikeBizError(err) {
+		if errors. {
 			log.Println(err)
 			return nil
 		}
