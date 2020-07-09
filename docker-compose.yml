@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 
 services:
   angulargo.api:
@@ -6,9 +6,9 @@ services:
     build: 
       context: .
       dockerfile: ./src/services/api/Dockerfile
-    command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=etcd:2379
+    command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=angulargo.etcd:2379
     depends_on:
-      - etcd
+      - angulargo.etcd
       - angulargo.trending
     networks:
       - frontend
@@ -20,9 +20,9 @@ services:
     build:
       context: .
       dockerfile: ./src/services/trending/Dockerfile
-    command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=etcd:2379
+    command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=angulargo.etcd:2379
     depends_on: 
-      - etcd    
+      - angulargo.etcd    
       - angulargo.gather
       - "postgres.data"
       - "redis.data"
@@ -36,9 +36,9 @@ services:
     build: 
       context: .
       dockerfile: ./src/services/gather/Dockerfile
-    command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=etcd:2379
+    command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=angulargo.etcd:2379
     depends_on:
-      - etcd
+      - angulargo.etcd
     networks:      
       - frontend
     restart: "unless-stopped"
@@ -48,33 +48,33 @@ services:
     build: 
       context: .
       dockerfile: ./src/services/schedule/Dockerfile
-    command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=etcd:2379
+    command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=angulargo.etcd:2379
     depends_on:
-      - etcd
+      - angulargo.etcd
       - angulargo.trending
     networks:      
       - frontend
     restart: "unless-stopped"
 
   micro.api:    
-    command: --registry=etcd --registry_address=etcd:2379 api --api_namespace=angulargo.micro.api --handler=rpc
+    command: --registry=etcd --registry_address=angulargo.etcd:2379 --api_namespace=angulargo.micro.api api --handler=rpc
     environment:
       - VIRTUAL_HOST=${API_EXTERNAL_DNS_NAME_OR_IP}
     image: micro/micro:v2.0.0
     depends_on:      
       - angulargo.api
-      - etcd
+      - angulargo.etcd
     ports:
       - "8080:8080"
     networks:
       - default      
     restart: "unless-stopped"
 
-  etcd:
+  angulargo.etcd:
     image: 'bitnami/etcd:latest'
     environment:
       - ALLOW_NONE_AUTHENTICATION=yes
-      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://angulargo.etcd:2379
     #ports:
     #  - 2379:2379
     #  - 2380:2380
@@ -108,6 +108,9 @@ volumes:
   postgres-data:
 
 networks:
-  default:    
+  default: 
+     name: ${PROJECT_NAME:-angulargo}_a_default
   frontend:
+     name: ${PROJECT_NAME:-angulargo}_b_frontend
   backend:
+     name: ${PROJECT_NAME:-angulargo}_c_backend
