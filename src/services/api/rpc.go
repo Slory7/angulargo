@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/slory7/angulargo/src/proto/api"
+	"github.com/slory7/angulargo/src/proto/trending"
 	"github.com/slory7/angulargo/src/services"
-	api "github.com/slory7/angulargo/src/services/api/proto"
-	trending "github.com/slory7/angulargo/src/services/trending/proto"
 
 	"github.com/slory7/copier"
 

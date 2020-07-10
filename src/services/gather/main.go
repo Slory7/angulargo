@@ -7,8 +7,8 @@ import (
 
 	"github.com/slory7/angulargo/src/infrastructure/app"
 	"github.com/slory7/angulargo/src/infrastructure/framework/net/httpclient"
+	"github.com/slory7/angulargo/src/proto/gather"
 	"github.com/slory7/angulargo/src/services"
-	gather "github.com/slory7/angulargo/src/services/gather/proto"
 
 	"github.com/nuveo/log"
 

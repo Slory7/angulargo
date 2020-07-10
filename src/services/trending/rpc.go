@@ -6,10 +6,10 @@ import (
 
 	"github.com/slory7/angulargo/src/infrastructure/app"
 	"github.com/slory7/angulargo/src/infrastructure/business/contracts"
+	"github.com/slory7/angulargo/src/proto/gather"
+	"github.com/slory7/angulargo/src/proto/trending"
 	"github.com/slory7/angulargo/src/services"
-	gather "github.com/slory7/angulargo/src/services/gather/proto"
 	m "github.com/slory7/angulargo/src/services/trending/datamodels"
-	trending "github.com/slory7/angulargo/src/services/trending/proto"
 	"github.com/slory7/angulargo/src/services/trending/services/githubtrending"
 
 	"github.com/nuveo/log"

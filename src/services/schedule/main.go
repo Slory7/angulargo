@@ -5,8 +5,8 @@ import (
 	"errors"
 	"math"
 
+	"github.com/slory7/angulargo/src/proto/trending"
 	"github.com/slory7/angulargo/src/services"
-	trending "github.com/slory7/angulargo/src/services/trending/proto"
 
 	"time"
 

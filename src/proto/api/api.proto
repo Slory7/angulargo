@@ -1,8 +1,9 @@
 syntax = "proto3";
 
 package api;
+option go_package = "github.com/slory7/angulargo/src/proto/api";
 
-import "github.com/slory7/angulargo/src/services/trending/proto/trending.proto" ;
+import "trending/trending.proto" ;
 
 service TrendingSrv{
     rpc GetGithubTrending(trending.Request) returns (trending.GithubTrendingInfo){        

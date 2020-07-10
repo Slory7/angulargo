@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package trending;
+option go_package = "github.com/slory7/angulargo/src/proto/trending";
 
 import  "github.com/protocolbuffers/protobuf/src/google/protobuf/timestamp.proto";
 
