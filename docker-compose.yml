@@ -3,7 +3,7 @@ version: '3.5'
 services:
   angulargo.api:
     image: angulargo-api:${TAG:-latest}
-    build: 
+    build:
       context: .
       dockerfile: ./src/services/api/Dockerfile
     command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=angulargo.etcd:2379
@@ -21,8 +21,8 @@ services:
       context: .
       dockerfile: ./src/services/trending/Dockerfile
     command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=angulargo.etcd:2379
-    depends_on: 
-      - angulargo.etcd    
+    depends_on:
+      - angulargo.etcd
       - angulargo.gather
       - "postgres.data"
       - "redis.data"
@@ -33,41 +33,41 @@ services:
 
   angulargo.gather:
     image: angulargo-gather:${TAG:-latest}
-    build: 
+    build:
       context: .
       dockerfile: ./src/services/gather/Dockerfile
     command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=angulargo.etcd:2379
     depends_on:
       - angulargo.etcd
-    networks:      
+    networks:
       - frontend
     restart: "unless-stopped"
 
   angulargo.schedule:
     image: angulargo-schedule:${TAG:-latest}
-    build: 
+    build:
       context: .
       dockerfile: ./src/services/schedule/Dockerfile
     command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=angulargo.etcd:2379
     depends_on:
       - angulargo.etcd
       - angulargo.trending
-    networks:      
+    networks:
       - frontend
     restart: "unless-stopped"
 
-  micro.api:    
+  micro.api:
     command: --registry=etcd --registry_address=angulargo.etcd:2379 --api_namespace=angulargo.micro.api api --handler=rpc
     environment:
       - VIRTUAL_HOST=${API_EXTERNAL_DNS_NAME_OR_IP}
-    image: micro/micro:v2.0.0
-    depends_on:      
+    image: micro/micro:latest
+    depends_on:
       - angulargo.api
       - angulargo.etcd
     ports:
       - "8080:8080"
     networks:
-      - default      
+      - default
     restart: "unless-stopped"
 
   angulargo.etcd:
@@ -86,31 +86,31 @@ services:
     restart: "unless-stopped"
 
   postgres.data:
-    image: postgres:alpine    
+    image: postgres:alpine
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD-postgres}
       - POSTGRES_DB=${POSTGRES_DB:-angulargo}
-    volumes: 
+    volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - backend  
+      - backend
     restart: "unless-stopped"
 
   redis.data:
-   image: redis:alpine 
-   networks:
-      - backend     
-   restart: "unless-stopped"
- 
+    image: redis:alpine
+    networks:
+      - backend
+    restart: "unless-stopped"
+
 volumes:
   etcd_data:
   postgres-data:
 
 networks:
-  default: 
-     name: ${PROJECT_NAME:-angulargo}_a_default
+  default:
+    name: ${PROJECT_NAME:-angulargo}_a_default
   frontend:
-     name: ${PROJECT_NAME:-angulargo}_b_frontend
+    name: ${PROJECT_NAME:-angulargo}_b_frontend
   backend:
-     name: ${PROJECT_NAME:-angulargo}_c_backend
+    name: ${PROJECT_NAME:-angulargo}_c_backend

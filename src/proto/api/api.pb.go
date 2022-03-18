@@ -4,9 +4,11 @@
 package api
 
 import (
+	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	_ "github.com/slory7/angulargo/src/proto/trending"
+	trending "github.com/slory7/angulargo/src/proto/trending"
+	grpc "google.golang.org/grpc"
 	math "math"
 )
 
@@ -35,4 +37,76 @@ var fileDescriptor_1b40cafcd4234784 = []byte{
 	0x3f, 0x31, 0x2f, 0xbd, 0x34, 0x27, 0xb1, 0x28, 0x3d, 0x5f, 0xbf, 0xb8, 0x28, 0x59, 0x1f, 0x6c,
 	0x3f, 0xc8, 0x9d, 0x49, 0x6c, 0x60, 0xa6, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0xe9, 0x64, 0x6a,
 	0x1c, 0xb9, 0x00, 0x00, 0x00,
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// TrendingSrvClient is the client API for TrendingSrv service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type TrendingSrvClient interface {
+	GetGithubTrending(ctx context.Context, in *trending.Request, opts ...grpc.CallOption) (*trending.GithubTrendingInfo, error)
+}
+
+type trendingSrvClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewTrendingSrvClient(cc *grpc.ClientConn) TrendingSrvClient {
+	return &trendingSrvClient{cc}
+}
+
+func (c *trendingSrvClient) GetGithubTrending(ctx context.Context, in *trending.Request, opts ...grpc.CallOption) (*trending.GithubTrendingInfo, error) {
+	out := new(trending.GithubTrendingInfo)
+	err := c.cc.Invoke(ctx, "/api.TrendingSrv/GetGithubTrending", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// TrendingSrvServer is the server API for TrendingSrv service.
+type TrendingSrvServer interface {
+	GetGithubTrending(context.Context, *trending.Request) (*trending.GithubTrendingInfo, error)
+}
+
+func RegisterTrendingSrvServer(s *grpc.Server, srv TrendingSrvServer) {
+	s.RegisterService(&_TrendingSrv_serviceDesc, srv)
+}
+
+func _TrendingSrv_GetGithubTrending_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(trending.Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TrendingSrvServer).GetGithubTrending(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.TrendingSrv/GetGithubTrending",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TrendingSrvServer).GetGithubTrending(ctx, req.(*trending.Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _TrendingSrv_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "api.TrendingSrv",
+	HandlerType: (*TrendingSrvServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetGithubTrending",
+			Handler:    _TrendingSrv_GetGithubTrending_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "api/api.proto",
 }

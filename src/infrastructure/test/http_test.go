@@ -7,7 +7,7 @@ import (
 	"github.com/slory7/angulargo/src/infrastructure/app"
 	"github.com/slory7/angulargo/src/infrastructure/framework/net/httpclient"
 
-	_ "github.com/crgimenes/goconfig/json"
+	_ "github.com/gosidekick/goconfig/json"
 )
 
 func TestHttpPost(t *testing.T) {

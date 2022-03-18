@@ -1,9 +1,10 @@
 package githubtrending
 
 import (
-	"github.com/slory7/angulargo/src/services/trending/datamodels"
 	"strconv"
 	"strings"
+
+	"github.com/slory7/angulargo/src/services/trending/datamodels"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -34,7 +35,7 @@ func (*GithubTrendingDocService) ParseDoc(content string) ([]*datamodels.GitRepo
 		description := strings.TrimSpace(s.Find("p").Text())
 		language := strings.TrimSpace(s.Find("[itemprop=programmingLanguage]").Text())
 
-		starHref := "/" + noSpaceTitle + "/stargazers." + name
+		starHref := "/" + noSpaceTitle + "/stargazers"
 		sstar := strings.TrimSpace(s.Find("[href=\"" + starHref + "\"]").Text())
 		stars, _ := strconv.ParseInt(strings.Replace(sstar, ",", "", -1), 10, 32)
 

@@ -4,18 +4,19 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/asim/go-micro/v3/errors"
+	"github.com/asim/go-micro/v3/metadata"
 	"github.com/google/uuid"
-	"github.com/micro/go-micro/errors"
-	"github.com/micro/go-micro/v2/metadata"
 	"github.com/nuveo/log"
 	"github.com/slory7/angulargo/src/infrastructure/business/contracts"
 	"golang.org/x/net/trace"
 )
 
 const (
-	ServiceNameTrending string = "angulargo.micro.srv.trending"
-	ServiceNameGather   string = "angulargo.micro.srv.gather"
-	ServiceNameApi      string = "angulargo.micro.api.api"
+	ServiceNameTrending string = "srv.trending"
+	ServiceNameGather   string = "srv.gather"
+	ServiceNameApi      string = "api"
+	ServiceNameApiWeb   string = "api.web"
 )
 
 func GetTrace(ctx context.Context) (traceID, fromName string) {
@@ -45,7 +46,7 @@ func GetContextWithTrace(ctx context.Context, fromNameIfEmpty string) context.Co
 	if !ok {
 		md = metadata.Metadata{}
 	}
-	traceID := md["X-Request-Id"]
+	traceID := md["X-Request-ID"]
 	if len(traceID) == 0 {
 		traceID = md["Traceid"]
 	}

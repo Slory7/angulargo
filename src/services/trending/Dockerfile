@@ -1,5 +1,5 @@
 FROM golang:alpine as builder
-ENV GOPROXY https://goproxy.io
+ENV GOPROXY https://goproxy.cn
 ENV CGO_ENABLED=0
 
 RUN apk add -U --no-cache ca-certificates

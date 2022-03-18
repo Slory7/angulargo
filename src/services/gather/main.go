@@ -12,7 +12,8 @@ import (
 
 	"github.com/nuveo/log"
 
-	micro "github.com/micro/go-micro/v2"
+	_ "github.com/asim/go-micro/plugins/registry/etcd/v3"
+	micro "github.com/asim/go-micro/v3"
 )
 
 func main() {
@@ -45,7 +46,7 @@ func (s *GatherSrv) GetHttpContent(ctx context.Context, req *gather.Request, rsp
 	services.PrintTrace(ctx, "GetHttpContent")
 
 	traceID, _ := services.GetTrace(ctx)
-	httpClient := app.Instance.GetIoCInstanceMust((*httpclient.IHttpClient)(nil)).(httpclient.IHttpClient)
+	httpClient := app.GetIoCInstanceMust[httpclient.IHttpClient]()
 
 	result, err := httpClient.HttpSend(req.BaseUrl, req.RelativeUrl, req.UrlParams, req.Headers, req.ContentType, req.Method, req.PostData, httpclient.TokenEmpty, traceID, false, req.TimeOut)
 

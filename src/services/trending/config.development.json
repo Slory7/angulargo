@@ -1,11 +1,12 @@
 {
     "appIsDebug": true,
     "trendingURL": "https://github.com/trending/go",
+    "requestTimeoutSeconds": 15,
     "dbType": "postgres",
     "dbConnectionString": "postgres://postgres:postgres@docker.data/angulargo?sslmode=disable",
     "dbReadOnlyConnectionString": "postgres://postgres:postgres@docker.data/angulargo?sslmode=disable",
-    "cacheByMinutes":5,
-    "RollbackVersionID":"",
+    "cacheByMinutes": 5,
+    "RollbackVersionID": "",
     "redis": {
         "hosts": "docker.data:6379",
         "password": "",

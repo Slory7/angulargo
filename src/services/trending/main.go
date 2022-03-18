@@ -10,7 +10,7 @@ import (
 func main() {
 
 	//Config
-	glbConfig = config.GetConfig(app.GetEnvironment(), &Config{}).(*Config)
+	glbConfig = config.GetConfig[Config](app.GetEnvironment())
 
 	app.InitAppInstance(&glbConfig.Config)
 

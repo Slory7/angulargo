@@ -3,8 +3,8 @@ package config
 import (
 	"github.com/nuveo/log"
 
-	"github.com/crgimenes/goconfig"
-	_ "github.com/crgimenes/goconfig/json"
+	"github.com/gosidekick/goconfig"
+	_ "github.com/gosidekick/goconfig/json"
 )
 
 type Config struct {
@@ -29,16 +29,17 @@ type RedisCfg struct {
 	MinIdleConns int    `json:"minIdleConns" cfg:"minIdleConns" cfgDefault:"0"`
 }
 
-func GetConfig(environment string, config interface{}) interface{} {
+func GetConfig[T any](environment string) T {
 	if environment != "" {
 		goconfig.File = "config." + environment + ".json"
 	} else {
 		goconfig.File = "config.json"
 	}
 	goconfig.DisableFlags = true
+	config := new(T)
 	err := goconfig.Parse(config)
 	if err != nil {
 		log.Fatal("config: ", err)
 	}
-	return config
+	return *config
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/slory7/angulargo/src/infrastructure/config"
 	"github.com/slory7/angulargo/src/infrastructure/services"
 
-	_ "github.com/crgimenes/goconfig/json"
+	_ "github.com/gosidekick/goconfig/json"
 )
 
 func init() {

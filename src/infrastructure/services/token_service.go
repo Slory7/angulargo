@@ -64,7 +64,8 @@ func (s *TokenService) GetToken() (token httpclient.TokenInfo, err error) {
 		"username":      s.userName,
 		"password":      s.passWord,
 	}
-	srv := app.Instance.GetIoCInstanceMust((*httpclient.IHttpClient)(nil)).(httpclient.IHttpClient)
+	//srv := app.Instance.GetIoCInstanceMust((*httpclient.IHttpClient)(nil)).(httpclient.IHttpClient)
+	srv := app.GetIoCInstanceMust[httpclient.IHttpClient]()
 	result, err := srv.HttpPostForm(s.baseURL, s.tokenRelativeURL, formData, httpclient.TokenEmpty, "", true, 5)
 	if err == nil && result.IsSuccess {
 		var tResult tokenResult

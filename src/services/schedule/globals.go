@@ -1,3 +1,3 @@
 package main
 
-var glbConfig *Config
+var glbConfig Config

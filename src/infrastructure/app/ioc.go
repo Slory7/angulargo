@@ -38,14 +38,17 @@ func (app *App) RegisterIoC(binder func(ioc.Binder)) {
 	}
 }
 
-func (app *App) GetIoCInstance(interfacePointer interface{}) (interface{}, error) {
-	serviceName := utils.GetInterfaceName(interfacePointer)
-	service, err := app.ServiceLocator.GetDService(serviceName)
-	return service, err
+func GetIoCInstance[T any]() (T, error) {
+	serviceName := utils.GetInterfaceName((*T)(nil))
+	service, err := Instance.ServiceLocator.GetDService(serviceName)
+	if err == nil {
+		return service.(T), nil
+	}
+	return (any)(nil).(T), err
 }
 
-func (app *App) GetIoCInstanceMust(interfacePointer interface{}) interface{} {
-	o, err := app.GetIoCInstance(interfacePointer)
+func GetIoCInstanceMust[T any]() T {
+	o, err := GetIoCInstance[T]()
 	if err != nil {
 		log.Fatal(err)
 	}

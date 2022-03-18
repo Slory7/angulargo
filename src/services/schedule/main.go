@@ -16,14 +16,15 @@ import (
 
 	"github.com/nuveo/log"
 
-	"github.com/micro/go-micro/v2"
-	"github.com/micro/go-micro/v2/client"
+	_ "github.com/asim/go-micro/plugins/registry/etcd/v3"
+	"github.com/asim/go-micro/v3"
+	"github.com/asim/go-micro/v3/client"
 )
 
 func main() {
 	log.Println("Schedule is running...")
 
-	glbConfig = config.GetConfig(app.GetEnvironment(), &Config{}).(*Config)
+	glbConfig = config.GetConfig[Config](app.GetEnvironment())
 
 	service := micro.NewService()
 	service.Init()

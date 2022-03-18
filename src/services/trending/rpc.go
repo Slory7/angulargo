@@ -14,8 +14,9 @@ import (
 
 	"github.com/nuveo/log"
 
-	"github.com/micro/go-micro/v2"
-	"github.com/micro/go-micro/v2/client"
+	_ "github.com/asim/go-micro/plugins/registry/etcd/v3"
+	"github.com/asim/go-micro/v3"
+	"github.com/asim/go-micro/v3/client"
 	"github.com/slory7/copier"
 )
 
@@ -41,7 +42,7 @@ type TrendingSrv struct {
 
 func (s *TrendingSrv) GetGithubTrending(ctx context.Context, req *trending.Request, rsp *trending.GithubTrendingInfo) error {
 	services.PrintTrace(ctx, "GetGithubTrending")
-	srv := app.Instance.GetIoCInstanceMust((*githubtrending.IGithubTrendingService)(nil)).(githubtrending.IGithubTrendingService)
+	srv := app.GetIoCInstanceMust[githubtrending.IGithubTrendingService]()
 	info, b, err := srv.GetTrendingInfo(req.Title)
 	if err != nil {
 		return err
@@ -67,7 +68,7 @@ func (s *TrendingSrv) FetchGithubTrending(ctx context.Context, req *trending.Emp
 func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trending.Empty, rsp *trending.GithubTrendingInfo) error {
 	services.PrintTrace(ctx, "GetAndSaveGithubTrending")
 
-	srv := app.Instance.GetIoCInstanceMust((*githubtrending.IGithubTrendingService)(nil)).(githubtrending.IGithubTrendingService)
+	srv := app.GetIoCInstanceMust[githubtrending.IGithubTrendingService]()
 	title := time.Now().Format("Monday, 2 January 2006")
 
 	info, exists, err := srv.GetTrendingInfo(title)
@@ -97,14 +98,14 @@ func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trendin
 
 func (s *TrendingSrv) fetchGithubTrendingInternal(ctx context.Context) (data m.GitTrendingAll, err error) {
 	gatherClient := gather.NewGatherService(services.ServiceNameGather, s.Client)
-	rpcReq := &gather.Request{BaseUrl: glbConfig.TrendingURL, Method: "GET", TimeOut: 5}
+	rpcReq := &gather.Request{BaseUrl: glbConfig.TrendingURL, Method: "GET", TimeOut: int32(glbConfig.RequestTimeoutSeconds)}
 	result, err := gatherClient.GetHttpContent(ctx, rpcReq)
 	if err != nil {
 		log.Errorf("get %s error:%v\n", rpcReq.BaseUrl, err)
 		return data, err
 	}
 
-	docService := app.Instance.GetIoCInstanceMust((*githubtrending.IGithubTrendingDocService)(nil)).(githubtrending.IGithubTrendingDocService)
+	docService := app.GetIoCInstanceMust[githubtrending.IGithubTrendingDocService]()
 	repos, err := docService.ParseDoc(result.Content)
 	if err != nil {
 		return data, err
