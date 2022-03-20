@@ -24,10 +24,6 @@ func GetInterfaceName(i interface{}) string {
 	}
 }
 
-// func GetGenericName[T any](v T) string {
-// 	if t := reflect.GenericTypeOf(v); t.Kind() == reflect.Ptr {
-// 		return t.Elem().Name()
-// 	} else {
-// 		return t.Name()
-// 	}
-// }
+func GetGenericName[T any]() string {
+	return GetInterfaceName((*T)(nil))
+}
