@@ -6,7 +6,6 @@ import (
 
 	"github.com/nuveo/log"
 
-	"github.com/jwells131313/dargo/ioc"
 	"github.com/slory7/angulargo/src/infrastructure/config"
 	"github.com/slory7/angulargo/src/infrastructure/data"
 	"github.com/slory7/angulargo/src/infrastructure/data/db"
@@ -22,8 +21,6 @@ type App struct {
 	Cache *cache.MemoryCache
 
 	Validator *validates.Validator
-
-	ServiceLocator ioc.ServiceLocator
 
 	db, dbReadOnly *db.Database
 }
