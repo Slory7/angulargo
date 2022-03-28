@@ -19,8 +19,8 @@ func (app *App) RegisterIoC(binder func(ioc.Binder)) {
 		if app.db != nil {
 			repo := repositories.NewRepository(app.db)
 			repoReadOnly := repositories.NewRepositoryReadOnly(app.dbReadOnly)
-			bi.BindConstant(utils.GetInterfaceName((*repositories.IRepository)(nil)), repo)
-			bi.BindConstant(utils.GetInterfaceName((*repositories.IRepositoryReadOnly)(nil)), repoReadOnly)
+			bi.BindConstant(utils.GetGenericName[repositories.IRepository](), repo)
+			bi.BindConstant(utils.GetGenericName[repositories.IRepositoryReadOnly](), repoReadOnly)
 		}
 
 		bi.Bind(utils.GetGenericName[httpclient.IHttpClient](), httpclient.HttpClient{})

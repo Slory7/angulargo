@@ -15,7 +15,7 @@ import (
 const (
 	ServiceNameTrending string = "srv.trending"
 	ServiceNameGather   string = "srv.gather"
-	ServiceNameApi      string = "api"
+	ServiceNameApi      string = "angulargo.api.api"
 	ServiceNameApiWeb   string = "api.web"
 )
 

@@ -30,12 +30,16 @@ type RedisCfg struct {
 }
 
 func GetConfig[T any](environment string) T {
+	return GetConfigFull[T](environment, false)
+}
+
+func GetConfigFull[T any](environment string, useFlags bool) T {
 	if environment != "" {
 		goconfig.File = "config." + environment + ".json"
 	} else {
 		goconfig.File = "config.json"
 	}
-	goconfig.DisableFlags = true
+	goconfig.DisableFlags = !useFlags
 	config := new(T)
 	err := goconfig.Parse(config)
 	if err != nil {

@@ -34,32 +34,32 @@ var _ context.Context
 var _ client.Option
 var _ server.Option
 
-// Api Endpoints for TrendingSrv service
+// Api Endpoints for Api service
 
-func NewTrendingSrvEndpoints() []*api.Endpoint {
+func NewApiEndpoints() []*api.Endpoint {
 	return []*api.Endpoint{}
 }
 
-// Client API for TrendingSrv service
+// Client API for Api service
 
-type TrendingSrvService interface {
+type ApiService interface {
 	GetGithubTrending(ctx context.Context, in *trending.Request, opts ...client.CallOption) (*trending.GithubTrendingInfo, error)
 }
 
-type trendingSrvService struct {
+type apiService struct {
 	c    client.Client
 	name string
 }
 
-func NewTrendingSrvService(name string, c client.Client) TrendingSrvService {
-	return &trendingSrvService{
+func NewApiService(name string, c client.Client) ApiService {
+	return &apiService{
 		c:    c,
 		name: name,
 	}
 }
 
-func (c *trendingSrvService) GetGithubTrending(ctx context.Context, in *trending.Request, opts ...client.CallOption) (*trending.GithubTrendingInfo, error) {
-	req := c.c.NewRequest(c.name, "TrendingSrv.GetGithubTrending", in)
+func (c *apiService) GetGithubTrending(ctx context.Context, in *trending.Request, opts ...client.CallOption) (*trending.GithubTrendingInfo, error) {
+	req := c.c.NewRequest(c.name, "Api.GetGithubTrending", in)
 	out := new(trending.GithubTrendingInfo)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -68,27 +68,27 @@ func (c *trendingSrvService) GetGithubTrending(ctx context.Context, in *trending
 	return out, nil
 }
 
-// Server API for TrendingSrv service
+// Server API for Api service
 
-type TrendingSrvHandler interface {
+type ApiHandler interface {
 	GetGithubTrending(context.Context, *trending.Request, *trending.GithubTrendingInfo) error
 }
 
-func RegisterTrendingSrvHandler(s server.Server, hdlr TrendingSrvHandler, opts ...server.HandlerOption) error {
-	type trendingSrv interface {
+func RegisterApiHandler(s server.Server, hdlr ApiHandler, opts ...server.HandlerOption) error {
+	type api interface {
 		GetGithubTrending(ctx context.Context, in *trending.Request, out *trending.GithubTrendingInfo) error
 	}
-	type TrendingSrv struct {
-		trendingSrv
+	type Api struct {
+		api
 	}
-	h := &trendingSrvHandler{hdlr}
-	return s.Handle(s.NewHandler(&TrendingSrv{h}, opts...))
+	h := &apiHandler{hdlr}
+	return s.Handle(s.NewHandler(&Api{h}, opts...))
 }
 
-type trendingSrvHandler struct {
-	TrendingSrvHandler
+type apiHandler struct {
+	ApiHandler
 }
 
-func (h *trendingSrvHandler) GetGithubTrending(ctx context.Context, in *trending.Request, out *trending.GithubTrendingInfo) error {
-	return h.TrendingSrvHandler.GetGithubTrending(ctx, in, out)
+func (h *apiHandler) GetGithubTrending(ctx context.Context, in *trending.Request, out *trending.GithubTrendingInfo) error {
+	return h.ApiHandler.GetGithubTrending(ctx, in, out)
 }

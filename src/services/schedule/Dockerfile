@@ -1,8 +1,6 @@
 FROM golang:alpine as builder
-ENV GOPROXY https://goproxy.cn
+ENV GOPROXY https://goproxy.cn,direct
 ENV CGO_ENABLED=0
-
-RUN apk add -U --no-cache ca-certificates
 
 RUN mkdir /build 
 WORKDIR /build
@@ -17,9 +15,7 @@ WORKDIR /build/src/services/schedule
 
 RUN go build -ldflags "-s -w" -o main .
 FROM alpine
-RUN adduser -S -D -H -h /app appuser
-USER appuser
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+#RUN apk add -U --no-cache ca-certificates && rm -rf /var/cache/apk/* /tmp/* 
 COPY --from=builder /build/src/services/schedule/main /app/
 COPY --from=builder /build/src/services/schedule/config.json /app/
 

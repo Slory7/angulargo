@@ -1,0 +1,18 @@
+{
+    "addr": ":8011",
+    "tls": {
+        "useTLS": false,
+        "cert": "tls/server.pem",
+        "key": "tls/server.key"
+    },
+    "grpcServerAddress": "localhost:8010",
+    "grpcClientTLS": {
+        "useTLS": false,
+        "caServerName": "localhost",
+        "ca": "tls/ca.crt",
+        "cert": "tls/client.pem",
+        "key": "tls/client.key"
+    },
+    "allowedOrigins": "*",
+    "allowMethods": ""
+}

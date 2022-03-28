@@ -5,7 +5,7 @@ option go_package = "github.com/slory7/angulargo/src/proto/api";
 
 import "trending/trending.proto" ;
 
-service TrendingSrv{
+service Api{
     rpc GetGithubTrending(trending.Request) returns (trending.GithubTrendingInfo){        
     }
 }

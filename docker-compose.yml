@@ -7,9 +7,15 @@ services:
       context: .
       dockerfile: ./src/services/api/Dockerfile
     command: --registry=etcd --register_interval=5 --register_ttl=10 --registry_address=angulargo.etcd:2379
+    environment:
+      - VIRTUAL_HOST=${API_EXTERNAL_DNS_NAME_OR_IP}
+    volumes:
+      - /home/certs:/etc/ssl/certs
     depends_on:
       - angulargo.etcd
       - angulargo.trending
+    ports:
+      - "80:8010"
     networks:
       - frontend
       - default
@@ -56,16 +62,37 @@ services:
       - frontend
     restart: "unless-stopped"
 
-  micro.api:
-    command: --registry=etcd --registry_address=angulargo.etcd:2379 --api_namespace=angulargo.micro.api api --handler=rpc
+  angulargo.api.web:
+    image: angulargo-api-web:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: ./src/services/api/cmd/web/Dockerfile
+    command: --grpcserveraddress=angulargo.api
     environment:
-      - VIRTUAL_HOST=${API_EXTERNAL_DNS_NAME_OR_IP}
-    image: micro/micro:latest
+      - VIRTUAL_HOST=${WEB_EXTERNAL_DNS_NAME_OR_IP}
+      - HTTP_PORT=81
+    volumes:
+      - /home/certs:/etc/ssl/certs
     depends_on:
       - angulargo.api
-      - angulargo.etcd
     ports:
-      - "8080:8080"
+      - "81:8011"
+    networks:
+      - default
+    restart: "unless-stopped"
+
+  angulargo.api.webgrpc:
+    image: 'casperlabs/grpcwebproxy'
+    command: --backend_addr=angulargo.api --allow_all_origins --run_tls_server=false
+    environment:
+      - VIRTUAL_HOST=${WEBGRPC_EXTERNAL_DNS_NAME_OR_IP}
+      - HTTP_PORT=82
+    volumes:
+      - /home/certs:/etc/ssl/certs
+    depends_on:
+      - angulargo.api
+    ports:
+      - "82:8080"
     networks:
       - default
     restart: "unless-stopped"

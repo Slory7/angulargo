@@ -14,3 +14,4 @@ coverage.txt
 __debug_bin
 *.crt
 *.key
+*.pem

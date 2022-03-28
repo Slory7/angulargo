@@ -3,6 +3,7 @@ package githubtrending
 import (
 	"github.com/slory7/angulargo/src/infrastructure/data/repositories"
 	m "github.com/slory7/angulargo/src/services/trending/datamodels"
+	"github.com/slory7/angulargo/src/services/trending/globals"
 )
 
 type IGithubTrendingService interface {
@@ -60,10 +61,10 @@ func (s *GithubTrendingService) SaveToDB(t *m.GitTrendingAll) (exists bool, err 
 		}
 		//keep recent only
 		if err == nil {
-			var nRecent int64 = 30
-			if count, _ := repoNew.Count(entity, ""); count > nRecent {
+			var nRecent int = globals.GlbConfig.KeepRecentNumber
+			if count, _ := repoNew.Count(entity, ""); int(count) > nRecent {
 				topSlice := make([]m.GitRepoTrending, 0)
-				nTop := int(count - nRecent)
+				nTop := int(count) - nRecent
 				err = repoNew.DB().ListByCondition(&topSlice, "id", 0, nTop, "", false, nil, "")
 				if err == nil {
 					topMaxID := topSlice[nTop-1].Id

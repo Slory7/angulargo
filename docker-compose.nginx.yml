@@ -2,14 +2,11 @@ version: '3.5'
 
 services:
   nginx-proxy:
-    image: richengke/nginx-proxy:${TAG:-latest}
-    build:
-      context: .
-      dockerfile: ./config/nginx/Dockerfile
+    image: nginxproxy/nginx-proxy:alpine
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - /home/certs:/etc/nginx/certs
-      #- ./config/nginx-proxy.conf:/etc/nginx/proxy.conf:ro
+      - /home/config/nginx/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
     ports:
       - "${PORT:-80}:80"
       - "${PORTSSL:-443}:443"

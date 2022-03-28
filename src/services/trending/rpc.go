@@ -10,6 +10,7 @@ import (
 	"github.com/slory7/angulargo/src/proto/trending"
 	"github.com/slory7/angulargo/src/services"
 	m "github.com/slory7/angulargo/src/services/trending/datamodels"
+	"github.com/slory7/angulargo/src/services/trending/globals"
 	"github.com/slory7/angulargo/src/services/trending/services/githubtrending"
 
 	"github.com/nuveo/log"
@@ -22,6 +23,7 @@ import (
 
 func StartRpc() {
 	service := micro.NewService(
+		//micro.Server(mgrpc.NewServer()),
 		micro.Name(services.ServiceNameTrending),
 	)
 
@@ -98,7 +100,7 @@ func (s *TrendingSrv) GetAndSaveGithubTrending(ctx context.Context, req *trendin
 
 func (s *TrendingSrv) fetchGithubTrendingInternal(ctx context.Context) (data m.GitTrendingAll, err error) {
 	gatherClient := gather.NewGatherService(services.ServiceNameGather, s.Client)
-	rpcReq := &gather.Request{BaseUrl: glbConfig.TrendingURL, Method: "GET", TimeOut: int32(glbConfig.RequestTimeoutSeconds)}
+	rpcReq := &gather.Request{BaseUrl: globals.GlbConfig.TrendingURL, Method: "GET", TimeOut: int32(globals.GlbConfig.RequestTimeoutSeconds)}
 	result, err := gatherClient.GetHttpContent(ctx, rpcReq)
 	if err != nil {
 		log.Errorf("get %s error:%v\n", rpcReq.BaseUrl, err)
