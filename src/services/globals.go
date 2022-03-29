@@ -16,7 +16,7 @@ const (
 	ServiceNameTrending string = "srv.trending"
 	ServiceNameGather   string = "srv.gather"
 	ServiceNameApi      string = "angulargo.api.api"
-	ServiceNameApiWeb   string = "api.web"
+	//ServiceNameApiWeb   string = "api.web"
 )
 
 func GetTrace(ctx context.Context) (traceID, fromName string) {
