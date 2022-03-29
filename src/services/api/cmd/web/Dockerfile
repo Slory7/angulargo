@@ -21,4 +21,5 @@ COPY --from=builder /build/src/services/api/cmd/web/main /app/
 COPY --from=builder /build/src/services/api/cmd/web/config.json /app/
 
 WORKDIR /app
+EXPOSE 8011
 ENTRYPOINT ["./main"]

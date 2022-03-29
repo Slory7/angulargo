@@ -20,4 +20,5 @@ COPY --from=builder /build/src/services/api/main /app/
 COPY --from=builder /build/src/services/api/config.json /app/
 
 WORKDIR /app
+EXPOSE 8010
 ENTRYPOINT ["./main"]

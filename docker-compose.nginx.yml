@@ -6,7 +6,7 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - /home/certs:/etc/nginx/certs
-      - /home/config/nginx/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+      #- /home/config/nginx/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf
     ports:
       - "${PORT:-80}:80"
       - "${PORTSSL:-443}:443"
